@@ -1,7 +1,7 @@
 {
-  "name": "@openhps/web-imu",
+  "name": "@openhps/web-sensors",
   "version": "0.1.0",
-  "description": "Open Hybrid Positioning System - Web Geolocation API",
+  "description": "Open Hybrid Positioning System - Web Sensors API",
   "author": "Maxim Van de Wynckel",
   "license": "Apache-2.0",
   "repository": {
@@ -18,8 +18,8 @@
   "sideEffects": false,
   "main": "./dist/cjs/index.js",
   "types": "./dist/types/index.d.ts",
-  "unpkg": "./dist/web/openhps-web-imu.min.js",
-  "jsdelivr": "./dist/web/openhps-web-imu.min.js",
+  "unpkg": "./dist/web/openhps-web-sensors.min.js",
+  "jsdelivr": "./dist/web/openhps-web-sensors.min.js",
   "module": "./dist/esm5/index.js",
   "es2015": "./dist/esm/index.js",
   "files": [
@@ -43,11 +43,9 @@
     "build:webpack:dev": "cross-env ../../node_modules/.bin/webpack --env dev --"
   },
   "peerDependencies": {
-    "@openhps/core": ">=0.3.2",
-    "@openhps/imu": ">=0.1.3"
+    "@openhps/core": ">=0.4.8"
   },
   "devDependencies": {
-    "@openhps/imu": "^0.1.3",
     "@types/w3c-generic-sensor": "^1.0.6",
     "@types/web": "^0.0.92",
     "cross-env": "^7.0.3"

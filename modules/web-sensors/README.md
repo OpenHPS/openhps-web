@@ -1,6 +1,6 @@
 <h1 align="center">
   <img alt="OpenHPS" src="https://openhps.org/images/logo_text-512.png" width="40%" /><br />
-  @openhps/web-geolocation
+  @openhps/web-sensors
 </h1>
 <p align="center">
     <a href="https://github.com/OpenHPS/openhps-web/actions/workflows/main.yml" target="_blank">
@@ -25,9 +25,9 @@
 This component 
 
 ## Getting Started
-If you have [npm installed](https://www.npmjs.com/get-npm), start using @openhps/web-geolocation with the following command.
+If you have [npm installed](https://www.npmjs.com/get-npm), start using @openhps/web-sensors with the following command.
 ```bash
-npm install @openhps/web-geolocation --save
+npm install @openhps/web-sensors --save
 ```
 ## Usage
 

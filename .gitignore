@@ -1,0 +1,8 @@
+node_modules/
+dist/
+docs/out/
+coverage/
+artifacts/
+.nyc_output/
+test-results.xml
+yarn-error.log

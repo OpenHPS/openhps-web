@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Web Example</title>
+        <script src="https://unpkg.com/@openhps/core@latest"></script>
+        <script src="openhps-web-geolocation.min.js"></script>
+    </head>
+    <body>
+        <script>
+            OpenHPS.core.ModelBuilder.create()
+                .from(new OpenHPS.web_geolocation.GeolocationSourceNode({
+                    autoStart: true,
+                    source: new OpenHPS.core.DataObject("web")
+                }))
+                .to(new OpenHPS.core.CallbackSinkNode(frame => {
+                    console.log(frame);
+                }))
+                .build();
+        </script>
+    </body>
+</html>

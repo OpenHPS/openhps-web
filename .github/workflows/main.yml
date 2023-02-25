@@ -125,7 +125,7 @@ jobs:
           key: ${{ runner.os }}-docs-v1-${{ hashFiles('**/yarn.lock') }}-${{ github.run_number }}
       - name: Build documentation
         run: |
-          yarn workspaces run build:typedoc
+          yarn run build:typedoc
 
   publish_documentation:
     name: Publish documentation

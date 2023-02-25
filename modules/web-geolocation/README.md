@@ -22,7 +22,7 @@
 </h3>
 
 <br />
-This component 
+This component uses the Web Geolocation API to retrieve the absolute position returned by the device.
 
 ## Getting Started
 If you have [npm installed](https://www.npmjs.com/get-npm), start using @openhps/web-geolocation with the following command.

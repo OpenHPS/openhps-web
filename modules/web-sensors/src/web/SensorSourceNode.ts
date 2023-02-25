@@ -17,11 +17,12 @@ import {
     Accelerometer as AccelerometerObject,
     AngularVelocity,
 } from '@openhps/core';
+import { SensorSourceNodeInterface } from '../SensorSourceNodeInterface';
 
 /**
- * Sensor source node using react-native-sensors.
+ * Sensor source node using Web Sensor API.
  */
-export class SensorSourceNode extends SourceNode<DataFrame> {
+export class SensorSourceNode extends SourceNode<DataFrame> implements SensorSourceNodeInterface {
     protected options: SensorSourceOptions;
     private _subscriptions: Map<new () => SensorObject, Sensor> = new Map();
     private _values: Map<new () => SensorObject, any> = new Map();
@@ -108,7 +109,7 @@ export class SensorSourceNode extends SourceNode<DataFrame> {
         });
     }
 
-    public createFrame(): Promise<void> {
+    protected createFrame(): Promise<void> {
         return new Promise<void>((resolve) => {
             const dataFrame = new DataFrame();
             dataFrame.source = this.source;

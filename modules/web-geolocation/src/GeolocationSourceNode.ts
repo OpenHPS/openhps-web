@@ -57,13 +57,17 @@ export class GeolocationSourceNode extends SourceNode<DataFrame> {
         geoPos.altitude = position.coords.altitude;
         geoPos.latitude = position.coords.latitude;
         geoPos.longitude = position.coords.longitude;
-        geoPos.linearVelocity = new LinearVelocity(position.coords.speed);
-        geoPos.orientation = Orientation.fromEuler({
-            yaw: position.coords.heading,
-            pitch: 0,
-            roll: 0,
-            unit: AngleUnit.DEGREE,
-        });
+        if (position.coords.speed) {
+            geoPos.linearVelocity = new LinearVelocity(position.coords.speed);
+        }
+        if (position.coords.heading) {
+            geoPos.orientation = Orientation.fromEuler({
+                yaw: position.coords.heading,
+                pitch: 0,
+                roll: 0,
+                unit: AngleUnit.DEGREE,
+            });
+        }
         return geoPos;
     }
 

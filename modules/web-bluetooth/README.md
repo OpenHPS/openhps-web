@@ -1,6 +1,6 @@
 <h1 align="center">
   <img alt="OpenHPS" src="https://openhps.org/images/logo_text-512.png" width="40%" /><br />
-  @openhps/web-geolocation
+  @openhps/web-bluetooth
 </h1>
 <p align="center">
     <a href="https://github.com/OpenHPS/openhps-web/actions/workflows/main.yml" target="_blank">
@@ -22,12 +22,13 @@
 </h3>
 
 <br />
-This component 
+This component adds a Web Bluetooth Scanning source node to OpenHPS to scan for BLE beacons or other BLE objects. The component uses
+the [Web Bluetooth Scanning API](https://googlechrome.github.io/samples/web-bluetooth/scan.html) which is currently not implemented in all browsers.
 
 ## Getting Started
-If you have [npm installed](https://www.npmjs.com/get-npm), start using @openhps/web-geolocation with the following command.
+If you have [npm installed](https://www.npmjs.com/get-npm), start using @openhps/web-bluetooth with the following command.
 ```bash
-npm install @openhps/web-geolocation --save
+npm install @openhps/web-bluetooth --save
 ```
 ## Usage
 

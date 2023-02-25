@@ -14,6 +14,7 @@
     "./modules/*"
   ],
   "scripts": {
+    "build:typedoc": "typedoc --options docs/typedoc.json",
     "clean": "shx rm -rf modules/*/dist && shx rm -rf modules/*/docs/out",
     "lint": "eslint modules/*/src/**"
   },

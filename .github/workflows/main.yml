@@ -127,9 +127,9 @@ jobs:
         run: |
           yarn run build:typedoc
           mkdir docs/out/examples/
-          cp -a /modules/web-bluetooth/examples/. docs/out/examples/web-bluetooth/
-          cp -a /modules/web-geolocation/examples/. docs/out/examples/web-geolocation/
-          cp -a /modules/web-sensors/examples/. docs/out/examples/web-sensors/
+          cp -a modules/web-bluetooth/examples/. docs/out/examples/web-bluetooth/
+          cp -a modules/web-geolocation/examples/. docs/out/examples/web-geolocation/
+          cp -a modules/web-sensors/examples/. docs/out/examples/web-sensors/
 
 
   publish_documentation:

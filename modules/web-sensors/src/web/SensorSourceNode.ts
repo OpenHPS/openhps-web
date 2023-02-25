@@ -5,7 +5,6 @@ import {
     SensorSourceOptions,
     Acceleration,
     Orientation,
-    TimeService,
     Quaternion,
     DataFrame,
     SensorObject,
@@ -18,6 +17,7 @@ import {
     AngularVelocity,
     AngularVelocityUnit,
     Magnetism,
+    SensorType,
 } from '@openhps/core';
 import { SensorSourceNodeInterface } from '../SensorSourceNodeInterface';
 
@@ -26,8 +26,8 @@ import { SensorSourceNodeInterface } from '../SensorSourceNodeInterface';
  */
 export class SensorSourceNode extends SourceNode<DataFrame> implements SensorSourceNodeInterface {
     protected options: SensorSourceOptions;
-    private _subscriptions: Map<new () => SensorObject, Sensor> = new Map();
-    private _values: Map<new () => SensorObject, any> = new Map();
+    private _subscriptions: Map<SensorType, Sensor> = new Map();
+    private _values: Map<SensorType, any> = new Map();
     private _lastPush = 0;
     private _running = false;
 
@@ -76,10 +76,9 @@ export class SensorSourceNode extends SourceNode<DataFrame> implements SensorSou
                 });
                 sensorInstance.addEventListener('reading', (event) => {
                     if (!this._running) return;
-                    const timestamp = TimeService.now();
-                    this._values.set(sensor, { ...event.target, timestamp });
+                    this._values.set(sensor, event.target);
                     if (this._isUpdated()) {
-                        this._lastPush = TimeService.now();
+                        this._lastPush = event.timeStamp;
                         this.createFrame().catch((ex) => {
                             this.logger('error', 'Unable to create sensor data frame!', ex);
                         });
@@ -95,7 +94,7 @@ export class SensorSourceNode extends SourceNode<DataFrame> implements SensorSou
     private _isUpdated(): boolean {
         return (
             Array.from(this._values.values()).filter((sensor) => sensor.timestamp > this._lastPush).length ===
-            this.options.sensors.length
+            Array.from(this._subscriptions.values()).filter((sensor) => sensor.activated).length
         );
     }
 
@@ -198,7 +197,7 @@ export class SensorSourceNode extends SourceNode<DataFrame> implements SensorSou
         });
     }
 
-    protected findSensor(sensor: new () => SensorObject): new (options?: SensorOptions) => Sensor {
+    protected findSensor(sensor: SensorType): new (options?: SensorOptions) => Sensor {
         switch (sensor) {
             case RelativeOrientationSensorObject:
                 return RelativeOrientationSensor;

@@ -34,10 +34,6 @@
                 .to(new OpenHPS.core.CallbackSinkNode(frame => {
                     document.getElementById('result').innerHTML = `
                         <b>Timestamp: </b> ${frame.createdTimestamp} </br>
-                        <b>Mag: </b> 
-                            x=${frame.getSensor(OpenHPS.core.Magnetometer).value.x}, 
-                            y=${frame.getSensor(OpenHPS.core.Magnetometer).value.y},
-                            z=${frame.getSensor(OpenHPS.core.Magnetometer).value.z} </br>
                         <b>Accl: </b> 
                             x=${frame.getSensor(OpenHPS.core.Accelerometer).value.x}, 
                             y=${frame.getSensor(OpenHPS.core.Accelerometer).value.y},

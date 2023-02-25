@@ -44,8 +44,8 @@
     "build:webpack": "cross-env ../../node_modules/.bin/npm-run-all --parallel build:webpack:*",
     "build:webpack:prod": "cross-env ../../node_modules/.bin/webpack --env prod --",
     "build:webpack:dev": "cross-env ../../node_modules/.bin/webpack --env dev --",
-    "bump:development": "cross-env ../../node_modules/.bin/standard-version --prerelease alpha -m 'chore(alpha): %s' --skip.changelog",
-    "bump:release": "cross-env ../../node_modules/.bin/standard-version -m 'chore(release): %s' --skip.changelog"
+    "bump:development": "cross-env ../../node_modules/.bin/standard-version --prerelease alpha -m 'chore(alpha): %s' --skip.changelog --path ./",
+    "bump:release": "cross-env ../../node_modules/.bin/standard-version -m 'chore(release): %s' --skip.changelog --path ./"
   },
   "peerDependencies": {
     "@openhps/core": ">=0.3.2",

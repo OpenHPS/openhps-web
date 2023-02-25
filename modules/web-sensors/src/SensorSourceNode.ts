@@ -15,19 +15,20 @@ import {
     Magnetometer as MagnetometerObject,
     Gyroscope as GyroscopeObject,
     Accelerometer as AccelerometerObject,
+    AngularVelocity,
 } from '@openhps/core';
 
 /**
  * Sensor source node using react-native-sensors.
  */
 export class SensorSourceNode extends SourceNode<DataFrame> {
-    protected options: IMUSourceNodeOptions;
+    protected options: SensorSourceOptions;
     private _subscriptions: Map<new () => SensorObject, Sensor> = new Map();
     private _values: Map<new () => SensorObject, any> = new Map();
     private _lastPush = 0;
     private _running = false;
 
-    constructor(options?: IMUSourceNodeOptions) {
+    constructor(options?: SensorSourceOptions) {
         super(options);
         this.options.interval = this.options.interval || 50;
         if (this.options.autoStart) {
@@ -38,16 +39,23 @@ export class SensorSourceNode extends SourceNode<DataFrame> {
 
     requestPermission(): Promise<void> {
         return new Promise((resolve, reject) => {
-            Promise.all(this.options.sensors.map(sensor => 
-                this.getPermissions(sensor).map(permission => 
-                    navigator.permissions.query({ name: permission as PermissionName }))).reduce((a, b) => [...a, ...b]))
-            .then(results => {
-                if (results.every((result) => result.state === "granted")) {
-                    resolve();
-                } else {
-                    reject(new Error(`No permission to use the required sensors!`));
-                }
-            }).catch(reject);
+            Promise.all(
+                this.options.sensors
+                    .map((sensor) =>
+                        this.getPermissions(sensor).map((permission) =>
+                            navigator.permissions.query({ name: permission as PermissionName }),
+                        ),
+                    )
+                    .reduce((a, b) => [...a, ...b]),
+            )
+                .then((results) => {
+                    if (results.every((result) => result.state === 'granted')) {
+                        resolve();
+                    } else {
+                        reject(new Error(`No permission to use the required sensors!`));
+                    }
+                })
+                .catch(reject);
         });
     }
 
@@ -61,9 +69,9 @@ export class SensorSourceNode extends SourceNode<DataFrame> {
             this.options.sensors.forEach((sensor) => {
                 const SensorType = this.findSensor(sensor);
                 const sensorInstance = new SensorType({
-                    frequency: Math.round(1000 / this.options.interval)
+                    frequency: Math.round(1000 / this.options.interval),
                 });
-                sensorInstance.addEventListener("reading", (value) => {
+                sensorInstance.addEventListener('reading', (value) => {
                     if (!this._running) return;
                     this._values.set(sensor, value);
                     if (this._isUpdated()) {
@@ -109,24 +117,34 @@ export class SensorSourceNode extends SourceNode<DataFrame> {
             const gyroscope: Gyroscope = this._values.get(GyroscopeObject);
             const orientation: AbsoluteOrientationSensor = this._values.get(AbsoluteOrientationSensorObject);
 
+            const sourceUID = this.source ? this.source.uid : this.uid;
+
             if (acceleration) {
-                dataFrame.addSensor(new AccelerometerObject(this.uid + "_accel", new Acceleration(
-                    acceleration.x,
-                    acceleration.y,
-                    acceleration.z,
-                ), 1000 / this.options.interval));
+                dataFrame.addSensor(
+                    new AccelerometerObject(
+                        sourceUID + '_accel',
+                        new Acceleration(acceleration.x, acceleration.y, acceleration.z),
+                        1000 / this.options.interval,
+                    ),
+                );
             }
             if (gyroscope) {
-                dataFrame.addSensor(new GyroscopeObject(this.uid + "_gyro", new Acceleration(
-                    gyroscope.x,
-                    gyroscope.y,
-                    gyroscope.z
-                ), 1000 / this.options.interval));
+                dataFrame.addSensor(
+                    new GyroscopeObject(
+                        sourceUID + '_gyro',
+                        new AngularVelocity(gyroscope.x, gyroscope.y, gyroscope.z),
+                        1000 / this.options.interval,
+                    ),
+                );
             }
             if (orientation) {
-                dataFrame.addSensor(new AbsoluteOrientationSensorObject(this.uid + "_absoluteorientation",
-                    Orientation.fromQuaternion(new Quaternion(...orientation.quaternion)), 
-                    1000 / this.options.interval));
+                dataFrame.addSensor(
+                    new AbsoluteOrientationSensorObject(
+                        sourceUID + '_absoluteorientation',
+                        Orientation.fromQuaternion(new Quaternion(...orientation.quaternion)),
+                        1000 / this.options.interval,
+                    ),
+                );
             }
 
             this.push(dataFrame);
@@ -167,21 +185,16 @@ export class SensorSourceNode extends SourceNode<DataFrame> {
             //     return ["ambient-light-sensor"];
             case RelativeOrientationSensorObject:
             case AbsoluteOrientationSensorObject:
-                return ["gyroscope", "accelerometer", "magnetometer"];
+                return ['gyroscope', 'accelerometer', 'magnetometer'];
             case GyroscopeObject:
-                return ["gyroscope"];
+                return ['gyroscope'];
             case MagnetometerObject:
-                return ["magnetometer"];
+                return ['magnetometer'];
             case LinearAccelerationSensorObject:
             case AccelerometerObject:
-                return ["accelerometer"];
+                return ['accelerometer'];
             default:
                 return undefined;
         }
     }
-}
-
-export interface IMUSourceNodeOptions extends SensorSourceOptions {
-    sensors: (new () => SensorObject)[];
-    softStop?: boolean;
 }

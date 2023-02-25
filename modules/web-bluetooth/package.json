@@ -1,7 +1,7 @@
 {
   "name": "@openhps/web-bluetooth",
   "version": "0.1.0",
-  "description": "Open Hybrid Positioning System - Web Geolocation API",
+  "description": "Open Hybrid Positioning System - Web Bluetooth Scanning API",
   "author": "Maxim Van de Wynckel",
   "license": "Apache-2.0",
   "repository": {
@@ -40,14 +40,16 @@
     "build:ts:types": "cross-env ../../node_modules/.bin/tsc --build tsconfig/tsconfig.bundle.types.json",
     "build:webpack": "cross-env ../../node_modules/.bin/npm-run-all --parallel build:webpack:*",
     "build:webpack:prod": "cross-env ../../node_modules/.bin/webpack --env prod --",
-    "build:webpack:dev": "cross-env ../../node_modules/.bin/webpack --env dev --"
+    "build:webpack:dev": "cross-env ../../node_modules/.bin/webpack --env dev --",
+    "bump:development": "cross-env ../../node_modules/.bin/standard-version --prerelease alpha -m 'chore(alpha): %s' --skip.changelog",
+    "bump:release": "cross-env ../../node_modules/.bin/standard-version -m 'chore(release): %s' --skip.changelog"
   },
   "peerDependencies": {
     "@openhps/core": ">=0.3.2",
     "@openhps/rf": ">=0.1.17"
   },
   "devDependencies": {
-    "@openhps/rf": "^0.1.17",
+    "@openhps/rf": ">=0.1.17",
     "@types/web-bluetooth": "^0.0.16",
     "cross-env": "^7.0.3"
   }

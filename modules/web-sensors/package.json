@@ -40,7 +40,9 @@
     "build:ts:types": "cross-env ../../node_modules/.bin/tsc --build tsconfig/tsconfig.bundle.types.json",
     "build:webpack": "cross-env ../../node_modules/.bin/npm-run-all --parallel build:webpack:*",
     "build:webpack:prod": "cross-env ../../node_modules/.bin/webpack --env prod --",
-    "build:webpack:dev": "cross-env ../../node_modules/.bin/webpack --env dev --"
+    "build:webpack:dev": "cross-env ../../node_modules/.bin/webpack --env dev --",
+    "bump:development": "cross-env ../../node_modules/.bin/standard-version --prerelease alpha -m 'chore(alpha): %s' --skip.changelog",
+    "bump:release": "cross-env ../../node_modules/.bin/standard-version -m 'chore(release): %s' --skip.changelog"
   },
   "peerDependencies": {
     "@openhps/core": ">=0.4.8"

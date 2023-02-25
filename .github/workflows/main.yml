@@ -15,6 +15,7 @@ jobs:
       - name: Build
         run: |
           yarn install
+          yarn run clean
           yarn workspaces run build
       - name: Quality
         run: |
@@ -39,11 +40,11 @@ jobs:
       - name: Bump version development
         if: github.ref == 'refs/heads/dev'
         run: |
-          npm run bump:development
+          yarn workspaces run bump:development
       - name: Bump version release
         if: github.ref == 'refs/heads/master'
         run: |
-          npm run bump:release
+          yarn workspaces run bump:release
       - name: Publish to NPM
         uses: JS-DevTools/npm-publish@v1
         if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev'

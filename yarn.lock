@@ -1084,17 +1084,17 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@openhps/core@>=0.4.8":
-  version "0.4.8"
-  resolved "https://registry.yarnpkg.com/@openhps/core/-/core-0.4.8.tgz#9eb07508051836465c0d58f33d54e82e4b3ca7f6"
-  integrity sha512-hgsyZwx3WKsZaik1+w88GL6IfGw1degYLpxfVn0q7FeV/2or5INCldthfs4ZeCi3SGFq4VqU6XPa+e99TYlC8Q==
+"@openhps/core@>=0.4.11":
+  version "0.4.11"
+  resolved "https://registry.yarnpkg.com/@openhps/core/-/core-0.4.11.tgz#80879cc63d28b51d818b5608f5fed72b5b178be6"
+  integrity sha512-Dk5itgPsF1qzRaWkVJ87DWTpb5Rl2JSi/xNCKDPYtyh83yChVzPaKDOubR18vCY3XCQen+LholSZf8KVsj2LHw==
   dependencies:
     reflect-metadata ">=0.1.13"
     threads "^1.7.0"
     typedjson "^1.8.0"
     uuid "^9.0.0"
 
-"@openhps/rf@^0.1.17":
+"@openhps/rf@>=0.1.17":
   version "0.1.17"
   resolved "https://registry.yarnpkg.com/@openhps/rf/-/rf-0.1.17.tgz#1e02acafa6511295cb0ca4f87cb5a4da5a58f9da"
   integrity sha512-RdOwMUtDuRGaUHwTzCDFv3SDyu2CP1fWhXDG/DuM6DjrCMuYNXjzochUK4He1cbCwXl0xhCw25mJZN5ovSsmUQ==

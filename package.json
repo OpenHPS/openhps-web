@@ -14,10 +14,10 @@
     "./modules/*"
   ],
   "scripts": {
-    "clean": "shx rm -rf ./dist && shx rm -rf ./docs/out",
+    "clean": "shx rm -rf modules/*/dist && shx rm -rf modules/*/docs/out",
     "test": "mocha --config modules/*/test/.mocharc.json",
-    "cover": "nyc mocha --config test/.mocharc.json && nyc report --reporter=cobertura",
-    "cover:ci": "nyc mocha --config test/.mocharc.json --reporter mocha-junit-reporter && nyc report --reporter=cobertura",
+    "cover": "nyc mocha --config modules/*/test/.mocharc.json && nyc report --reporter=cobertura",
+    "cover:ci": "nyc mocha --config modules/*/test/.mocharc.json --reporter mocha-junit-reporter && nyc report --reporter=cobertura",
     "lint": "eslint modules/*/src/**"
   },
   "devDependencies": {
@@ -33,7 +33,7 @@
     "@babel/cli": "^7.21.0",
     "@babel/core": "^7.21.0",
     "@babel/preset-env": "^7.20.2",
-    "@openhps/core": ">=0.4.8",
+    "@openhps/core": ">=0.4.11",
     "@types/chai": "^4.3.4",
     "@types/cordova": "11.0.0",
     "@types/mocha": "^10.0.1",

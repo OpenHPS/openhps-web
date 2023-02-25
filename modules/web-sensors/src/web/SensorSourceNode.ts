@@ -74,9 +74,10 @@ export class SensorSourceNode extends SourceNode<DataFrame> implements SensorSou
                 const sensorInstance = new SensorType({
                     frequency: Math.round(1000 / this.options.interval),
                 });
-                sensorInstance.addEventListener('reading', (value) => {
+                sensorInstance.addEventListener('reading', (event) => {
                     if (!this._running) return;
-                    this._values.set(sensor, value);
+                    const timestamp = TimeService.now();
+                    this._values.set(sensor, { ...event.target, timestamp });
                     if (this._isUpdated()) {
                         this._lastPush = TimeService.now();
                         this.createFrame().catch((ex) => {

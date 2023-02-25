@@ -1,10 +1,10 @@
 /// <reference types="web-bluetooth" />
 
 import { SourceNode, SensorSourceOptions } from '@openhps/core';
-import { BLEObject, MACAddress, RelativeRSSI, RFDataFrame } from '@openhps/rf';
+import { BLEObject, RelativeRSSI, RFDataFrame } from '@openhps/rf';
 
 /**
- * BLE source node using cordova-plugin-ibeacon.
+ * BLE source node using Web Bluetooth API
  */
 export class BLESourceNode extends SourceNode<RFDataFrame> {
     protected options: BLESourceNodeOptions;
@@ -13,7 +13,8 @@ export class BLESourceNode extends SourceNode<RFDataFrame> {
 
     constructor(options?: BLESourceNodeOptions) {
         super(options);
-        this.options.uuids = this.options.uuids || undefined;
+        this.options.source = this.options.source ?? new BLEObject().setUID(this.uid);
+
         this.once('build', this._onBleInit.bind(this));
         this.once('destroy', this.stop.bind(this));
     }
@@ -29,12 +30,27 @@ export class BLESourceNode extends SourceNode<RFDataFrame> {
         });
     }
 
+    requestPermission(): Promise<void> {
+        return new Promise((resolve) => {
+            // navigator.permissions.query({ name: 'bluetooth' as PermissionName }).then((result) => {
+            //     if (result.state === 'granted') {
+            //         resolve();
+            //     } else {
+            //         reject(new Error(`No permission to use Bluetooth scanning!`));
+            //     }
+            // })
+            // .catch(reject);
+            resolve();
+        });
+    }
+
     start(): Promise<void> {
         return new Promise((resolve, reject) => {
             this.bluetooth
                 .requestLEScan({
                     acceptAllAdvertisements: true,
                     keepRepeatedDevices: true,
+                    filters: this.options.filters,
                 })
                 .then((scan) => {
                     if (this.scan) {
@@ -66,10 +82,17 @@ export class BLESourceNode extends SourceNode<RFDataFrame> {
     }
 
     private onAdvertisement(event: BluetoothAdvertisingEvent): void {
+        this.logger('debug', 'BLE Advertisement', event);
+
         const frame = new RFDataFrame();
-        const object = new BLEObject(MACAddress.fromString(event.device.id));
+        const object = new BLEObject();
+        object.uid = event.device.id;
         object.displayName = event.device.name;
-        object.parseManufacturerData(Buffer.from(Object.values(event.manufacturerData)[0].buffer));
+
+        const manufacturerData = Object.values(event.manufacturerData);
+        if (manufacturerData.length > 0) {
+            object.parseManufacturerData(manufacturerData[0].buffer);
+        }
         frame.addObject(object);
 
         frame.source = this.source;
@@ -80,8 +103,5 @@ export class BLESourceNode extends SourceNode<RFDataFrame> {
 }
 
 export interface BLESourceNodeOptions extends SensorSourceOptions {
-    /**
-     * List of UUIDs that should be included in the result scan.
-     */
-    uuids?: string[];
+    filters?: BluetoothLEScanFilter[] | undefined;
 }

@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Web Example</title>
+        <link rel="stylesheet" href="css/styles.css">
+    </head>
+    <body>
+        <button id="start">Start Test</button>
+
+        <div id="result">
+            Click the start button to test the component.
+        </div>
+
+        <script type="module">
+            import { 
+                ModelBuilder, 
+                CallbackSinkNode, 
+                DataObject 
+            } from './js/openhps-core.es.min.js';
+            import { BLESourceNode } from './js/openhps-web-bluetooth.es.min.js';
+
+            const sourceObject = new DataObject("web");
+            const source = new BLESourceNode({
+                uid: "source",
+                source: sourceObject,
+                interval: 100
+            });
+
+            document.getElementById("start").onclick = () => source.start();
+
+            source.on('error', console.error);
+            ModelBuilder.create()
+                .from(source)
+                .to(new CallbackSinkNode(frame => {
+                    document.getElementById('result').innerHTML = `
+                        <b>Timestamp: </b> ${frame.createdTimestamp} </br>
+                        ${frame.getObjects().filter(o => o.uid !== frame.source.uid).map(object => {
+                            return `${object.uid} RSSI=${frame.source.getRelativePosition(object.uid).rssi}`;
+                        }).join("</br>")}
+                    `;
+                }))
+                .build().catch(console.error);
+        </script>
+    </body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Web Example</title>
+        <link rel="stylesheet" href="css/styles.css">
+        <script src="https://unpkg.com/@openhps/core@latest"></script>
+        <script src="js/openhps-web-sensors.min.js"></script>
+    </head>
+    <body>
+        <button id="start" onclick="source.start()">Start Test</button>
+
+        <div id="result">
+            Click the start button to test the component.
+        </div>
+
+        <script>
+            var source = new OpenHPS.sensors.SensorSourceNode({
+                uid: "source",
+                autoStart: false,
+                sensors: [
+                    OpenHPS.core.Magnetometer,
+                    OpenHPS.core.Accelerometer,
+                    OpenHPS.core.Gyroscope,
+                    OpenHPS.core.LinearAccelerationSensor
+                ],
+                source: new OpenHPS.core.DataObject("web"),
+                interval: 100
+            });
+            source.requestPermission();
+
+            source.on('error', console.error);
+            OpenHPS.core.ModelBuilder.create()
+                .from(source)
+                .to(new OpenHPS.core.CallbackSinkNode(frame => {
+                    document.getElementById('result').innerHTML = `
+                        <b>Timestamp: </b> ${frame.createdTimestamp} </br>
+                        <b>Mag: </b> 
+                            x=${frame.getSensor(OpenHPS.core.Magnetometer).value.x}, 
+                            y=${frame.getSensor(OpenHPS.core.Magnetometer).value.y},
+                            z=${frame.getSensor(OpenHPS.core.Magnetometer).value.z} </br>
+                        <b>Accl: </b> 
+                            x=${frame.getSensor(OpenHPS.core.Accelerometer).value.x}, 
+                            y=${frame.getSensor(OpenHPS.core.Accelerometer).value.y},
+                            z=${frame.getSensor(OpenHPS.core.Accelerometer).value.z} </br>
+                        <b>Gyro: </b> 
+                            x=${frame.getSensor(OpenHPS.core.Gyroscope).value.x}, 
+                            y=${frame.getSensor(OpenHPS.core.Gyroscope).value.y},
+                            z=${frame.getSensor(OpenHPS.core.Gyroscope).value.z} </br>
+                    `;
+                }))
+                .build().catch(console.error);
+        </script>
+    </body>
+</html>

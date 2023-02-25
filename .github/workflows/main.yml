@@ -121,11 +121,16 @@ jobs:
         uses: actions/cache@v2
         with:
           path: |
-            **/docs/out
+            docs/out
           key: ${{ runner.os }}-docs-v1-${{ hashFiles('**/yarn.lock') }}-${{ github.run_number }}
       - name: Build documentation
         run: |
           yarn run build:typedoc
+          mkdir docs/out/examples/
+          cp -a /modules/web-bluetooth/examples/. docs/out/examples/web-bluetooth/
+          cp -a /modules/web-geolocation/examples/. docs/out/examples/web-geolocation/
+          cp -a /modules/web-sensors/examples/. docs/out/examples/web-sensors/
+
 
   publish_documentation:
     name: Publish documentation
@@ -139,14 +144,14 @@ jobs:
         uses: actions/cache@v2
         with:
           path: |
-            **/docs/out
+            docs/out
           key: ${{ runner.os }}-docs-v1-${{ hashFiles('**/yarn.lock') }}-${{ github.run_number }}
       - name: Publish Documentation
         uses: actions/upload-artifact@v2
         with:
           name: docs
           path: |
-            **/docs/out/*
+            docs/out/*
       - name: Deploy site to GitHub
         if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main') && success()
         uses: peaceiris/actions-gh-pages@v3

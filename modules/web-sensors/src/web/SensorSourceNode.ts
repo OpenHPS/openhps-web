@@ -16,6 +16,8 @@ import {
     Gyroscope as GyroscopeObject,
     Accelerometer as AccelerometerObject,
     AngularVelocity,
+    AngularVelocityUnit,
+    Magnetism,
 } from '@openhps/core';
 import { SensorSourceNodeInterface } from '../SensorSourceNodeInterface';
 
@@ -31,7 +33,7 @@ export class SensorSourceNode extends SourceNode<DataFrame> implements SensorSou
 
     constructor(options?: SensorSourceOptions) {
         super(options);
-        this.options.interval = this.options.interval || 50;
+        this.options.interval = this.options.interval || 100;
         if (this.options.autoStart) {
             this.once('build', this.start.bind(this));
         }
@@ -115,17 +117,30 @@ export class SensorSourceNode extends SourceNode<DataFrame> implements SensorSou
             dataFrame.source = this.source;
 
             const acceleration: Accelerometer = this._values.get(AccelerometerObject);
+            const linearAcceleration: LinearAccelerationSensor = this._values.get(LinearAccelerationSensorObject);
             const gyroscope: Gyroscope = this._values.get(GyroscopeObject);
             const orientation: AbsoluteOrientationSensor = this._values.get(AbsoluteOrientationSensorObject);
+            const relativeOrientation: RelativeOrientationSensor = this._values.get(RelativeOrientationSensorObject);
+            const magnetometer: Magnetometer = this._values.get(MagnetometerObject);
 
             const sourceUID = this.source ? this.source.uid : this.uid;
+            const frequency = 1000 / this.options.interval;
 
             if (acceleration) {
                 dataFrame.addSensor(
                     new AccelerometerObject(
                         sourceUID + '_accel',
                         new Acceleration(acceleration.x, acceleration.y, acceleration.z),
-                        1000 / this.options.interval,
+                        frequency,
+                    ),
+                );
+            }
+            if (linearAcceleration) {
+                dataFrame.addSensor(
+                    new LinearAccelerationSensorObject(
+                        sourceUID + '_linearaccel',
+                        new Acceleration(linearAcceleration.x, linearAcceleration.y, linearAcceleration.z),
+                        frequency,
                     ),
                 );
             }
@@ -133,8 +148,13 @@ export class SensorSourceNode extends SourceNode<DataFrame> implements SensorSou
                 dataFrame.addSensor(
                     new GyroscopeObject(
                         sourceUID + '_gyro',
-                        new AngularVelocity(gyroscope.x, gyroscope.y, gyroscope.z),
-                        1000 / this.options.interval,
+                        new AngularVelocity(
+                            gyroscope.x,
+                            gyroscope.y,
+                            gyroscope.z,
+                            AngularVelocityUnit.RADIAN_PER_SECOND,
+                        ),
+                        frequency,
                     ),
                 );
             }
@@ -143,7 +163,25 @@ export class SensorSourceNode extends SourceNode<DataFrame> implements SensorSou
                     new AbsoluteOrientationSensorObject(
                         sourceUID + '_absoluteorientation',
                         Orientation.fromQuaternion(new Quaternion(...orientation.quaternion)),
-                        1000 / this.options.interval,
+                        frequency,
+                    ),
+                );
+            }
+            if (relativeOrientation) {
+                dataFrame.addSensor(
+                    new RelativeOrientationSensorObject(
+                        sourceUID + '_relativeorientation',
+                        Orientation.fromQuaternion(new Quaternion(...relativeOrientation.quaternion)),
+                        frequency,
+                    ),
+                );
+            }
+            if (magnetometer) {
+                dataFrame.addSensor(
+                    new MagnetometerObject(
+                        sourceUID + '_mag',
+                        new Magnetism(magnetometer.x, magnetometer.y, magnetometer.z),
+                        frequency,
                     ),
                 );
             }

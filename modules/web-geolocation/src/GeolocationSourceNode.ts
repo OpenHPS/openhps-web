@@ -28,16 +28,31 @@ export class GeolocationSourceNode extends SourceNode<DataFrame> {
         this.options.source = this.source ?? new DataObject();
     }
 
+    requestPermission(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            navigator.permissions
+                .query({ name: 'gelocation' as PermissionName })
+                .then((result) => {
+                    if (result.state === 'granted') {
+                        resolve();
+                    } else {
+                        reject(new Error(`No permission to use the geolocation api!`));
+                    }
+                })
+                .catch(reject);
+        });
+    }
+
     start(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this.geolocation = navigator.geolocation;
             this.geolocation.watchPosition(
-                (position) => {
+                (position: GeolocationPosition) => {
                     const geoPos = this._convertPosition(position);
                     this.source.setPosition(geoPos);
                     this.push(new DataFrame(this.source));
                 },
-                (error) => {
+                (error: GeolocationPositionError) => {
                     this.logger('error', 'Unable to watch for position changes!', error as any);
                     reject(error);
                 },
@@ -81,12 +96,12 @@ export class GeolocationSourceNode extends SourceNode<DataFrame> {
     onPull(): Promise<DataFrame> {
         return new Promise<DataFrame>((resolve, reject) => {
             this.geolocation.getCurrentPosition(
-                (position) => {
+                (position: GeolocationPosition) => {
                     const geoPos = this._convertPosition(position);
                     this.source.setPosition(geoPos);
                     resolve(new DataFrame(this.source));
                 },
-                (error) => reject(error),
+                (error: GeolocationPositionError) => reject(error),
                 {
                     enableHighAccuracy: true,
                     timeout: this.options.timeout,

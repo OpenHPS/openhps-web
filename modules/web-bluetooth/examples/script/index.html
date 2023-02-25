@@ -4,7 +4,8 @@
         <title>Web Example</title>
         <link rel="stylesheet" href="css/styles.css">
         <script src="https://unpkg.com/@openhps/core@latest"></script>
-        <script src="js/openhps-web-geolocation.min.js"></script>
+        <script src="https://unpkg.com/@openhps/rf@0.1.20"></script>
+        <script src="js/openhps-web-bluetooth.min.js"></script>
     </head>
     <body>
         <button id="start" onclick="source.start()">Start Test</button>
@@ -14,21 +15,25 @@
         </div>
 
         <script>
-            var source = new OpenHPS.geolocation.GeolocationSourceNode({
+            var sourceObject = new OpenHPS.core.DataObject("web");
+            var source = new OpenHPS.bluetooth.BLESourceNode({
                 uid: "source",
-                autoStart: false,
-                source: new OpenHPS.core.DataObject("web")
+                source: sourceObject,
+                interval: 100
             });
+
+            source.on('error', console.error);
             OpenHPS.core.ModelBuilder.create()
                 .from(source)
                 .to(new OpenHPS.core.CallbackSinkNode(frame => {
                     document.getElementById('result').innerHTML = `
                         <b>Timestamp: </b> ${frame.createdTimestamp} </br>
-                        <b>Latitude: </b> ${frame.source.position.latitude} </br>
-                        <b>Longitude: </b> ${frame.source.position.longitude} </br>
+                        ${frame.getObjects().filter(o => o.uid !== frame.source.uid).map(object => {
+                            return `${object.uid} RSSI=${frame.source.getRelativePosition(object.uid).rssi}`;
+                        }).join("</br>")}
                     `;
                 }))
-                .build();
+                .build().catch(console.error);
         </script>
     </body>
 </html>

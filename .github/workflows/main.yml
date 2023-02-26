@@ -24,6 +24,7 @@ jobs:
         with:
           path: |
             **/dist
+            **/modules/*/dist
           key: ${{ runner.os }}-build-v1-${{ hashFiles('**/yarn.lock') }}-${{ github.run_number }}
       - name: Installing dependencies
         run: |
@@ -56,6 +57,7 @@ jobs:
         with:
           path: |
             **/dist
+            **/modules/*/dist
           key: ${{ runner.os }}-build-v1-${{ hashFiles('**/yarn.lock') }}-${{ github.run_number }}
       - name: Quality
         run: |
@@ -87,6 +89,7 @@ jobs:
         with:
           path: |
             **/dist
+            **/modules/*/dist
           key: ${{ runner.os }}-build-v1-${{ hashFiles('**/yarn.lock') }}-${{ github.run_number }}
       - name: Load test and coverage cache
         uses: actions/cache@v2
@@ -116,6 +119,7 @@ jobs:
         with:
           path: |
             **/dist
+            **/modules/*/dist
           key: ${{ runner.os }}-build-v1-${{ hashFiles('**/yarn.lock') }}-${{ github.run_number }}
       - name: Load document cache
         uses: actions/cache@v2
@@ -204,6 +208,7 @@ jobs:
         with:
           path: |
             **/dist
+            **/modules/*/dist
           key: ${{ runner.os }}-build-v1-${{ hashFiles('**/yarn.lock') }}-${{ github.run_number }}
       - name: Configure Publish
         run: |
@@ -217,6 +222,25 @@ jobs:
         with:
           token: ${{ secrets.NPM_TOKEN }}
           tag: dev
+          package: ./modules/web-bluetooth/package.json
+      - name: Publish to NPM (dev)
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          tag: dev
+          package: ./modules/web-geolocation/package.json
+      - name: Publish to NPM (dev)
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          tag: dev
+          package: ./modules/webxr/package.json
+      - name: Publish to NPM (dev)
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          tag: dev
+          package: ./modules/web-sensors/package.json
       - name: Publish to GitHub
         if: success()
         run: |
@@ -243,6 +267,7 @@ jobs:
         with:
           path: |
             **/dist
+            **/modules/*/dist
           key: ${{ runner.os }}-build-v1-${{ hashFiles('**/yarn.lock') }}-${{ github.run_number }}
       - name: Configure Publish
         run: |
@@ -256,6 +281,25 @@ jobs:
         with:
           token: ${{ secrets.NPM_TOKEN }}
           tag: latest
+          package: ./modules/web-bluetooth/package.json
+      - name: Publish to NPM (master)
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          tag: latest
+          package: ./modules/web-geolocation/package.json
+      - name: Publish to NPM (master)
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          tag: latest
+          package: ./modules/webxr/package.json
+      - name: Publish to NPM (master)
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          tag: latest
+          package: ./modules/web-sensors/package.json
       - name: Publish to GitHub
         if: success()
         run: |

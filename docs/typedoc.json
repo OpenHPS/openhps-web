@@ -4,7 +4,8 @@
     "entryPoints": [
         "../modules/web-bluetooth",
         "../modules/web-geolocation",
-        "../modules/web-sensors"
+        "../modules/web-sensors",
+        "../modules/webxr"
     ],
     "excludePrivate": true,
     "hideGenerator": true,

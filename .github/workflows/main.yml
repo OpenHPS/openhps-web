@@ -151,7 +151,7 @@ jobs:
         with:
           name: docs
           path: |
-            **/docs/out/*
+            docs/out/*
       - name: Deploy site to GitHub
         if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main') && success()
         uses: peaceiris/actions-gh-pages@v3
@@ -211,7 +211,7 @@ jobs:
           git config --global user.email 'ci@openhps.org'
       - name: Bump version development
         run: |
-          yarn workspaces run bump:development
+          yarn run bump:development
       - name: Publish to NPM (dev)
         uses: JS-DevTools/npm-publish@v1
         with:
@@ -250,7 +250,7 @@ jobs:
           git config --global user.email 'ci@openhps.org'
       - name: Bump version release
         run: |
-          yarn workspaces run bump:release
+          yarn run bump:release
       - name: Publish to NPM (master)
         uses: JS-DevTools/npm-publish@v1
         with:

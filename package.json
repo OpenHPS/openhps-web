@@ -16,7 +16,9 @@
   "scripts": {
     "build:typedoc": "typedoc --options docs/typedoc.json",
     "clean": "shx rm -rf docs/out && shx rm -rf modules/*/dist && shx rm -rf modules/*/docs/out",
-    "lint": "eslint modules/*/src/**"
+    "lint": "eslint modules/*/src/**",
+    "bump:development": "standard-version --prerelease alpha -m 'chore(alpha): %s' --skip.changelog",
+    "bump:release": "standard-version -m 'chore(release): %s' --skip.changelog"
   },
   "devDependencies": {
     "shx": "^0.3.4",

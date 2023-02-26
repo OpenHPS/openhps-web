@@ -32,14 +32,6 @@ export class BLESourceNode extends SourceNode<RFDataFrame> {
 
     requestPermission(): Promise<void> {
         return new Promise((resolve) => {
-            // navigator.permissions.query({ name: 'bluetooth' as PermissionName }).then((result) => {
-            //     if (result.state === 'granted') {
-            //         resolve();
-            //     } else {
-            //         reject(new Error(`No permission to use Bluetooth scanning!`));
-            //     }
-            // })
-            // .catch(reject);
             resolve();
         });
     }

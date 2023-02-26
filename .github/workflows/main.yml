@@ -67,15 +67,6 @@ jobs:
     name: Unit tests
     needs: build
     runs-on: ubuntu-latest
-    services:
-      jena-fuseki:
-        image: 'stain/jena-fuseki:jena4'
-        env:
-          ADMIN_PASSWORD: test
-          FUSEKI_DATASET_1: openhps-rdf-1
-          FUSEKI_DATASET_2: openhps-rdf-2
-        ports:
-          - 3030:3030
     steps:
       - uses: actions/checkout@v3
       - name: Load dependency cache
@@ -125,7 +116,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: |
-            **/docs/out
+            docs/out
           key: ${{ runner.os }}-docs-v1-${{ hashFiles('**/yarn.lock') }}-${{ github.run_number }}
       - name: Build documentation
         run: |
@@ -134,6 +125,7 @@ jobs:
           cp -a modules/web-bluetooth/examples/. docs/out/examples/web-bluetooth/
           cp -a modules/web-geolocation/examples/. docs/out/examples/web-geolocation/
           cp -a modules/web-sensors/examples/. docs/out/examples/web-sensors/
+          cp -a modules/webxr/examples/. docs/out/examples/webxr/
 
 
   publish_documentation:
@@ -148,7 +140,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: |
-            **/docs/out
+            docs/out
           key: ${{ runner.os }}-docs-v1-${{ hashFiles('**/yarn.lock') }}-${{ github.run_number }}
       - name: Publish Documentation
         uses: actions/upload-artifact@v2

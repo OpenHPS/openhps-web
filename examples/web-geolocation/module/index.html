@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Web Example</title>
+        <link rel="stylesheet" href="css/styles.css">
+    </head>
+    <body>
+        <button id="start">Start Test</button>
+
+        <div id="result">
+            Click the start button to test the component.
+        </div>
+
+        <script type="module">
+            import { 
+                ModelBuilder, 
+                CallbackSinkNode, 
+                DataObject 
+            } from './js/openhps-core.es.min.js';
+            import { GeolocationSourceNode } from './js/openhps-web-geolocation.es.min.js';
+
+            var source = new GeolocationSourceNode({
+                uid: "source",
+                autoStart: false,
+                source: new DataObject("web")
+            });
+
+            document.getElementById("start").onclick = () => source.start();
+            
+            ModelBuilder.create()
+                .from(source)
+                .to(new CallbackSinkNode(frame => {
+                    document.getElementById('result').innerHTML = `
+                        <b>Timestamp: </b> ${frame.createdTimestamp} </br>
+                        <b>Latitude: </b> ${frame.source.position.latitude} </br>
+                        <b>Longitude: </b> ${frame.source.position.longitude} </br>
+                    `;
+                }))
+                .build();
+        </script>
+    </body>
+</html>

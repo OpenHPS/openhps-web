@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>@openhps/webxr - Basic Example</title>
+    </head>
+    <body>
+        <button onclick="window.start()">Start</button>
+
+        <script type="module">
+        import { ModelBuilder } from '../common/openhps-core.es.js';
+        import { XRSource, XRSink, WebXRService } from '../common/openhps-webxr.es.js';
+        
+        window.start = function() {
+            ModelBuilder.create()
+                .addService(new WebXRService())
+                .from(new XRSource())
+                .to(new XRSink())
+                .build().then(model => {
+
+                }).catch(console.error);
+        }
+        </script>
+    </body>
+</html>

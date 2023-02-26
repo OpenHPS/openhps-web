@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Web Example</title>
+        <link rel="stylesheet" href="css/styles.css">
+        <script src="https://unpkg.com/@openhps/core@latest"></script>
+        <script src="js/openhps-web-geolocation.min.js"></script>
+    </head>
+    <body>
+        <button id="start" onclick="source.start()">Start Test</button>
+
+        <div id="result">
+            Click the start button to test the component.
+        </div>
+
+        <script>
+            var source = new OpenHPS.geolocation.GeolocationSourceNode({
+                uid: "source",
+                autoStart: false,
+                source: new OpenHPS.core.DataObject("web")
+            });
+            OpenHPS.core.ModelBuilder.create()
+                .from(source)
+                .to(new OpenHPS.core.CallbackSinkNode(frame => {
+                    document.getElementById('result').innerHTML = `
+                        <b>Timestamp: </b> ${frame.createdTimestamp} </br>
+                        <b>Latitude: </b> ${frame.source.position.latitude} </br>
+                        <b>Longitude: </b> ${frame.source.position.longitude} </br>
+                    `;
+                }))
+                .build();
+        </script>
+    </body>
+</html>

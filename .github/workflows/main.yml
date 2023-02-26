@@ -18,14 +18,14 @@ jobs:
         with:
           path: |
             **/node_modules
-          key: ${{ runner.os }}-dependencies-v1-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-dependencies-v1-${{ hashFiles('**/package.json') }}
       - name: Load build cache
         uses: actions/cache@v2
         with:
           path: |
             **/dist
             **/modules/*/dist
-          key: ${{ runner.os }}-build-v1-${{ hashFiles('**/yarn.lock') }}-${{ github.run_number }}
+          key: ${{ runner.os }}-build-v1-${{ hashFiles('**/package.json') }}-${{ github.run_number }}
       - name: Installing dependencies
         run: |
           yarn install
@@ -51,14 +51,14 @@ jobs:
         with:
           path: |
             **/node_modules
-          key: ${{ runner.os }}-dependencies-v1-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-dependencies-v1-${{ hashFiles('**/package.json') }}
       - name: Load build cache
         uses: actions/cache@v2
         with:
           path: |
             **/dist
             **/modules/*/dist
-          key: ${{ runner.os }}-build-v1-${{ hashFiles('**/yarn.lock') }}-${{ github.run_number }}
+          key: ${{ runner.os }}-build-v1-${{ hashFiles('**/package.json') }}-${{ github.run_number }}
       - name: Quality
         run: |
           yarn run lint
@@ -74,21 +74,21 @@ jobs:
         with:
           path: |
             **/node_modules
-          key: ${{ runner.os }}-dependencies-v1-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-dependencies-v1-${{ hashFiles('**/package.json') }}
       - name: Load build cache
         uses: actions/cache@v2
         with:
           path: |
             **/dist
             **/modules/*/dist
-          key: ${{ runner.os }}-build-v1-${{ hashFiles('**/yarn.lock') }}-${{ github.run_number }}
+          key: ${{ runner.os }}-build-v1-${{ hashFiles('**/package.json') }}-${{ github.run_number }}
       - name: Load test and coverage cache
         uses: actions/cache@v2
         with:
           path: |
             **/test-results.xml
             **/coverage
-          key: ${{ runner.os }}-test-v1-${{ hashFiles('**/yarn.lock') }}-${{ github.run_number }}
+          key: ${{ runner.os }}-test-v1-${{ hashFiles('**/package.json') }}-${{ github.run_number }}
       - name: Test
         run: |
           yarn workspaces run cover:ci
@@ -104,20 +104,20 @@ jobs:
         with:
           path: |
             **/node_modules
-          key: ${{ runner.os }}-dependencies-v1-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-dependencies-v1-${{ hashFiles('**/package.json') }}
       - name: Load build cache
         uses: actions/cache@v2
         with:
           path: |
             **/dist
             **/modules/*/dist
-          key: ${{ runner.os }}-build-v1-${{ hashFiles('**/yarn.lock') }}-${{ github.run_number }}
+          key: ${{ runner.os }}-build-v1-${{ hashFiles('**/package.json') }}-${{ github.run_number }}
       - name: Load document cache
         uses: actions/cache@v2
         with:
           path: |
-            docs/out
-          key: ${{ runner.os }}-docs-v1-${{ hashFiles('**/yarn.lock') }}-${{ github.run_number }}
+            **/docs/out
+          key: ${{ runner.os }}-docs-v1-${{ hashFiles('**/package.json') }}-${{ github.run_number }}
       - name: Build documentation
         run: |
           yarn run build:typedoc
@@ -140,8 +140,8 @@ jobs:
         uses: actions/cache@v2
         with:
           path: |
-            docs/out
-          key: ${{ runner.os }}-docs-v1-${{ hashFiles('**/yarn.lock') }}-${{ github.run_number }}
+            **/docs/out
+          key: ${{ runner.os }}-docs-v1-${{ hashFiles('**/package.json') }}-${{ github.run_number }}
       - name: Publish Documentation
         uses: actions/upload-artifact@v2
         with:
@@ -167,7 +167,7 @@ jobs:
           path: |
             **/test-results.xml
             **/coverage
-          key: ${{ runner.os }}-test-v1-${{ hashFiles('**/yarn.lock') }}-${{ github.run_number }}
+          key: ${{ runner.os }}-test-v1-${{ hashFiles('**/package.json') }}-${{ github.run_number }}
       - name: Publish unit test results
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()
@@ -194,14 +194,14 @@ jobs:
         with:
           path: |
             **/node_modules
-          key: ${{ runner.os }}-dependencies-v1-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-dependencies-v1-${{ hashFiles('**/package.json') }}
       - name: Load build cache
         uses: actions/cache@v2
         with:
           path: |
             **/dist
             **/modules/*/dist
-          key: ${{ runner.os }}-build-v1-${{ hashFiles('**/yarn.lock') }}-${{ github.run_number }}
+          key: ${{ runner.os }}-build-v1-${{ hashFiles('**/package.json') }}-${{ github.run_number }}
       - name: Configure Publish
         run: |
           git config --global user.name 'CI'
@@ -253,14 +253,14 @@ jobs:
         with:
           path: |
             **/node_modules
-          key: ${{ runner.os }}-dependencies-v1-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-dependencies-v1-${{ hashFiles('**/package.json') }}
       - name: Load build cache
         uses: actions/cache@v2
         with:
           path: |
             **/dist
             **/modules/*/dist
-          key: ${{ runner.os }}-build-v1-${{ hashFiles('**/yarn.lock') }}-${{ github.run_number }}
+          key: ${{ runner.os }}-build-v1-${{ hashFiles('**/package.json') }}-${{ github.run_number }}
       - name: Configure Publish
         run: |
           git config --global user.name 'CI'

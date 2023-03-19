@@ -28,15 +28,19 @@ export class GeolocationSourceNode extends SourceNode<DataFrame> {
         this.options.source = this.source ?? new DataObject();
     }
 
-    requestPermission(): Promise<void> {
+    static checkPermissions(): Promise<boolean> {
+        return this.requestPermissions();
+    }
+
+    static requestPermissions(): Promise<boolean> {
         return new Promise((resolve, reject) => {
             navigator.permissions
-                .query({ name: 'gelocation' as PermissionName })
+                .query({ name: 'geolocation' as PermissionName })
                 .then((result) => {
                     if (result.state === 'granted') {
-                        resolve();
+                        resolve(true);
                     } else {
-                        reject(new Error(`No permission to use the geolocation api!`));
+                        resolve(false);
                     }
                 })
                 .catch(reject);

@@ -40,10 +40,14 @@ export class SensorSourceNode extends SourceNode<DataFrame> implements SensorSou
         this.once('destroy', this.stop.bind(this));
     }
 
-    requestPermission(): Promise<void> {
+    static checkPermissions(sensors: SensorType[]): Promise<boolean> {
+        return this.requestPermissions(sensors);
+    }
+
+    static requestPermissions(sensors: SensorType[]): Promise<boolean> {
         return new Promise((resolve, reject) => {
             Promise.all(
-                this.options.sensors
+                sensors
                     .map((sensor) =>
                         this.getPermissions(sensor).map((permission) =>
                             navigator.permissions.query({ name: permission as PermissionName }),
@@ -53,9 +57,9 @@ export class SensorSourceNode extends SourceNode<DataFrame> implements SensorSou
             )
                 .then((results) => {
                     if (results.every((result) => result.state === 'granted')) {
-                        resolve();
+                        resolve(true);
                     } else {
-                        reject(new Error(`No permission to use the required sensors!`));
+                        resolve(false);
                     }
                 })
                 .catch(reject);
@@ -218,7 +222,7 @@ export class SensorSourceNode extends SourceNode<DataFrame> implements SensorSou
         }
     }
 
-    protected getPermissions(sensor: new () => SensorObject): string[] {
+    protected static getPermissions(sensor: new () => SensorObject): string[] {
         switch (sensor) {
             // case SensorType.AMBIENT_LIGHT:
             //     return ["ambient-light-sensor"];

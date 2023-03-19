@@ -30,9 +30,22 @@ export class BLESourceNode extends SourceNode<RFDataFrame> {
         });
     }
 
-    requestPermission(): Promise<void> {
-        return new Promise((resolve) => {
-            resolve();
+    static checkPermissions(): Promise<boolean> {
+        return this.requestPermissions();
+    }
+
+    static requestPermissions(): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            navigator.permissions
+                .query({ name: 'bluetooth-le-scan' as PermissionName })
+                .then((result) => {
+                    if (result.state === 'granted') {
+                        resolve(true);
+                    } else {
+                        resolve(false);
+                    }
+                })
+                .catch(reject);
         });
     }
 

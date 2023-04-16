@@ -47,10 +47,10 @@
   },
   "peerDependencies": {
     "@openhps/core": ">=0.3.2",
-    "@openhps/rf": ">=0.1.19"
+    "@openhps/rf": ">=0.1.24"
   },
   "devDependencies": {
-    "@openhps/rf": ">=0.1.19",
+    "@openhps/rf": ">=0.1.24",
     "@types/web-bluetooth": "^0.0.16",
     "cross-env": "^7.0.3"
   }

@@ -1,7 +1,7 @@
 /// <reference types="web-bluetooth" />
 
 import { SourceNode, SensorSourceOptions } from '@openhps/core';
-import { BLEObject, RelativeRSSI, RFDataFrame } from '@openhps/rf';
+import { BLEObject, BLEService, BLEUUID, RelativeRSSI, RFDataFrame } from '@openhps/rf';
 
 /**
  * BLE source node using Web Bluetooth API
@@ -94,9 +94,21 @@ export class BLESourceNode extends SourceNode<RFDataFrame> {
         object.uid = event.device.id;
         object.displayName = event.device.name;
 
-        const manufacturerData = Object.values(event.manufacturerData);
-        if (manufacturerData.length > 0) {
-            object.parseManufacturerData(manufacturerData[0].buffer);
+        if (event.manufacturerData) {
+            Object.keys(event.manufacturerData).forEach((manufacturer) => {
+                const data = event.manufacturerData[manufacturer];
+                object.parseManufacturerData(parseInt(manufacturer), new Uint8Array(data.buffer));
+            });
+        }
+        if (event.serviceData) {
+            Object.keys(event.serviceData).map((serviceKey) => {
+                const data = event.serviceData[serviceKey];
+                const serviceUUID = BLEUUID.fromString(serviceKey);
+                object.services.push(new BLEService(serviceUUID, new Uint8Array(data.buffer)));
+            });
+        }
+        if (!object.txPower && event.txPower) {
+            object.txPower = event.txPower;
         }
         frame.addObject(object);
 

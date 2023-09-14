@@ -18,6 +18,8 @@ import {
     AngularVelocityUnit,
     Magnetism,
     SensorType,
+    AccelerationUnit,
+    MagnetismUnit,
 } from '@openhps/core';
 import { SensorSourceNodeInterface } from '../SensorSourceNodeInterface';
 
@@ -142,7 +144,12 @@ export class SensorSourceNode extends SourceNode<DataFrame> implements SensorSou
                 dataFrame.addSensor(
                     new AccelerometerObject(
                         sourceUID + '_accel',
-                        new Acceleration(acceleration.x, acceleration.y, acceleration.z),
+                        new Acceleration(
+                            acceleration.x,
+                            acceleration.y,
+                            acceleration.z,
+                            AccelerationUnit.METER_PER_SECOND_SQUARE,
+                        ),
                         frequency,
                     ),
                 );
@@ -151,7 +158,12 @@ export class SensorSourceNode extends SourceNode<DataFrame> implements SensorSou
                 dataFrame.addSensor(
                     new LinearAccelerationSensorObject(
                         sourceUID + '_linearaccel',
-                        new Acceleration(linearAcceleration.x, linearAcceleration.y, linearAcceleration.z),
+                        new Acceleration(
+                            linearAcceleration.x,
+                            linearAcceleration.y,
+                            linearAcceleration.z,
+                            AccelerationUnit.METER_PER_SECOND_SQUARE,
+                        ),
                         frequency,
                     ),
                 );
@@ -192,7 +204,7 @@ export class SensorSourceNode extends SourceNode<DataFrame> implements SensorSou
                 dataFrame.addSensor(
                     new MagnetometerObject(
                         sourceUID + '_mag',
-                        new Magnetism(magnetometer.x, magnetometer.y, magnetometer.z),
+                        new Magnetism(magnetometer.x, magnetometer.y, magnetometer.z, MagnetismUnit.MICROTESLA),
                         frequency,
                     ),
                 );

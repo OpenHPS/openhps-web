@@ -15,16 +15,30 @@
             import { 
                 ModelBuilder, 
                 CallbackSinkNode, 
-                DataObject 
+                DataObject,
+                Magnetometer,
+                Accelerometer,
+                Gyroscope,
+                LinearAccelerationSensor
             } from './js/openhps-core.es.min.js';
-            import { GeolocationSourceNode } from './js/openhps-web-sensors.es.min.js';
+            import { SensorSourceNode } from './js/openhps-web-sensors.es.min.js';
 
-            var source = new GeolocationSourceNode({
+            var source = new SensorSourceNode({
                 uid: "source",
                 autoStart: false,
-                source: new DataObject("web")
+                sensors: [
+                    Magnetometer,
+                    Accelerometer,
+                    Gyroscope,
+                    LinearAccelerationSensor
+                ],
+                source: new DataObject("web"),
+                interval: 100
             });
+            source.requestPermissions();
 
+            source.on('error', console.error);
+            
             document.getElementById("start").onclick = () => source.start();
             
             ModelBuilder.create()
@@ -32,8 +46,14 @@
                 .to(new CallbackSinkNode(frame => {
                     document.getElementById('result').innerHTML = `
                         <b>Timestamp: </b> ${frame.createdTimestamp} </br>
-                        <b>Latitude: </b> ${frame.source.position.latitude} </br>
-                        <b>Longitude: </b> ${frame.source.position.longitude} </br>
+                        <b>Accl: </b> 
+                            x=${frame.getSensor(Accelerometer).value.x}, 
+                            y=${frame.getSensor(Accelerometer).value.y},
+                            z=${frame.getSensor(Accelerometer).value.z} </br>
+                        <b>Gyro: </b> 
+                            x=${frame.getSensor(Gyroscope).value.x}, 
+                            y=${frame.getSensor(Gyroscope).value.y},
+                            z=${frame.getSensor(Gyroscope).value.z} </br>
                     `;
                 }))
                 .build();

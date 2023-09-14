@@ -26,7 +26,7 @@
                 source: new OpenHPS.core.DataObject("web"),
                 interval: 100
             });
-            source.requestPermission();
+            source.requestPermissions();
 
             source.on('error', console.error);
             OpenHPS.core.ModelBuilder.create()

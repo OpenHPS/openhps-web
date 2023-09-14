@@ -2,11 +2,6 @@
 # yarn lockfile v1
 
 
-"@openhps/imu@^0.1.3":
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/@openhps/imu/-/imu-0.1.3.tgz#ede8a47da9e3ed3a38fb3b50f0752db9c559d64b"
-  integrity sha512-ga9nCJ33gP1u/O0lwG/elM6avBYilTE2CnijloAgayrGZgEdlJnC3GgN1+DFfSN5flDEpGR8RaCW1izmAofrSQ==
-
 "@types/w3c-generic-sensor@^1.0.6":
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/@types/w3c-generic-sensor/-/w3c-generic-sensor-1.0.6.tgz#3669e4a2c53ccfbf12bf9b761816cab7c3e52be0"
@@ -14,10 +9,10 @@
   dependencies:
     typescript "^2.2.2"
 
-"@types/web@^0.0.92":
-  version "0.0.92"
-  resolved "https://registry.yarnpkg.com/@types/web/-/web-0.0.92.tgz#b38e9c4a2b10ff728db25139beb5f6df6e966712"
-  integrity sha512-i9mM47aUrYCG+H3Q8czM9YDqdxJ1uIZW+E2urzI4VCCJF5vDtXv1myL5OuwichFNIJ+vlO3HUYr4ReI4BJqT1w==
+"@types/web@^0.0.114":
+  version "0.0.114"
+  resolved "https://registry.yarnpkg.com/@types/web/-/web-0.0.114.tgz#468e69265d7d9e5872a51e0df05a6bc40e5a5434"
+  integrity sha512-nrkwsB8u0VNHwElFSl6ZCgu0BCbsQu5BPq7mJtBpW7rYBmiLZNWE5KqcHDw8GXQMqWsnFB3EnXsAx7UysQwcMg==
 
 cross-env@^7.0.3:
   version "7.0.3"

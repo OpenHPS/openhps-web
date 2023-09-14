@@ -1,4 +1,4 @@
-import { PushOptions, SinkNode, SinkNodeOptions } from '@openhps/core';
+import { SinkNode, SinkNodeOptions } from '@openhps/core';
 import { XRDataFrame } from '../../data';
 import { WebXRService } from '../../service';
 
@@ -28,8 +28,8 @@ export class XRSink<In extends XRDataFrame> extends SinkNode<In> {
         });
     }
 
-    onPush(data: In, options?: PushOptions): Promise<void> {
-        return new Promise((resolve, reject) => {
+    onPush(): Promise<void> {
+        return new Promise((resolve) => {
             const gl = this._service.gl;
             const session = this._service.session;
             gl.bindFramebuffer(gl.FRAMEBUFFER, session.renderState.baseLayer.framebuffer);

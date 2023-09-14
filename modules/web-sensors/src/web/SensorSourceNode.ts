@@ -66,6 +66,10 @@ export class SensorSourceNode extends SourceNode<DataFrame> implements SensorSou
         });
     }
 
+    requestPermissions(): Promise<boolean> {
+        return SensorSourceNode.requestPermissions(this.options.sensors);
+    }
+
     start(): Promise<void> {
         return new Promise<void>((resolve) => {
             this._running = true;
@@ -75,6 +79,10 @@ export class SensorSourceNode extends SourceNode<DataFrame> implements SensorSou
 
             this.options.sensors.forEach((sensor) => {
                 const SensorType = this.findSensor(sensor);
+                if (SensorType === undefined) {
+                    // Not supported
+                    return;
+                }
                 const sensorInstance = new SensorType({
                     frequency: Math.round(1000 / this.options.interval),
                 });
@@ -214,7 +222,7 @@ export class SensorSourceNode extends SourceNode<DataFrame> implements SensorSou
             case GyroscopeObject:
                 return Gyroscope;
             case MagnetometerObject:
-                return Magnetometer;
+                return (window as any).Magnetometer; // Experimental
             case AccelerometerObject:
                 return Accelerometer;
             default:

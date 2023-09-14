@@ -60,7 +60,7 @@ export class XRSource extends SourceNode<XRDataFrame> {
                 const viewport = baseLayer.getViewport(view);
                 gl.viewport(viewport.x, viewport.y, viewport.width, viewport.height);
                 const depthData = frame.getDepthInformation(view);
-                const image = this._service.glBinding.getCameraImage(view.camera);
+                //const image = this._service.glBinding.getCameraImage(view.camera);
                 dataFrame.depth = depthData;
             }
 

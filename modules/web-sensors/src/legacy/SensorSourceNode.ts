@@ -14,7 +14,6 @@ import { SensorSourceNodeInterface } from '../SensorSourceNodeInterface';
 
 /**
  * IMU source using the HTML5 browser API for device motion and device orientation.
- *
  * @category Source node
  */
 export class SensorSourceNode extends SourceNode<DataFrame> implements SensorSourceNodeInterface {

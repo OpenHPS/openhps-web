@@ -9,6 +9,8 @@ import {
     Gyroscope as GyroscopeObject,
     Accelerometer as AccelerometerObject,
     DataObject,
+    AccelerationUnit,
+    AngularVelocityUnit,
 } from '@openhps/core';
 import { SensorSourceNodeInterface } from '../SensorSourceNodeInterface';
 
@@ -48,6 +50,7 @@ export class SensorSourceNode extends SourceNode<DataFrame> implements SensorSou
                                 event.accelerationIncludingGravity.x,
                                 event.accelerationIncludingGravity.y,
                                 event.accelerationIncludingGravity.z,
+                                AccelerationUnit.METER_PER_SECOND_SQUARE,
                             ),
                             frequency,
                         ),
@@ -59,6 +62,7 @@ export class SensorSourceNode extends SourceNode<DataFrame> implements SensorSou
                                 event.rotationRate.beta,
                                 event.rotationRate.gamma,
                                 event.rotationRate.alpha,
+                                AngularVelocityUnit.RADIAN_PER_SECOND,
                             ),
                             frequency,
                         ),
@@ -66,7 +70,12 @@ export class SensorSourceNode extends SourceNode<DataFrame> implements SensorSou
                     dataFrame.addSensor(
                         new AccelerometerObject(
                             sensorUID + '_linearaccl',
-                            new Acceleration(event.acceleration.x, event.acceleration.y, event.acceleration.z),
+                            new Acceleration(
+                                event.acceleration.x,
+                                event.acceleration.y,
+                                event.acceleration.z,
+                                AccelerationUnit.METER_PER_SECOND_SQUARE,
+                            ),
                             frequency,
                         ),
                     );

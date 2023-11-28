@@ -17,7 +17,8 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "typeRoots": [
-            "../types"
+            "../types",
+            "node_modules"
         ]
     },
 }

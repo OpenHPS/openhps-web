@@ -31,6 +31,7 @@
     "web"
   ],
   "scripts": {
+    "example": "shx cp node_modules/@openhps/*/dist/web/*.js examples/common/ && shx cp dist/web/*.js examples/common/ && serve ./examples --ssl-cert ./examples/cert/server.crt --ssl-key ./examples/cert/key.pem",
     "test": "cross-env ../../node_modules/.bin/mocha --config test/.mocharc.json",
     "cover": "cross-env ../../node_modules/.bin/nyc cross-env ../../node_modules/.bin/mocha --config test/.mocharc.json && cross-env ../../node_modules/.bin/nyc report --reporter=cobertura",
     "cover:ci": "cross-env ../../node_modules/.bin/nyc cross-env ../../node_modules/.bin/mocha --config test/.mocharc.json --reporter mocha-junit-reporter && cross-env ../../node_modules/.bin/nyc report --reporter=cobertura",
@@ -46,11 +47,13 @@
     "build:webpack:dev": "cross-env ../../node_modules/.bin/webpack --env dev --"
   },
   "peerDependencies": {
-    "@openhps/core": ">=0.3.2",
-    "@openhps/video": ">=0.1.11"
+    "@openhps/core": ">=0.6.4",
+    "@openhps/video": ">=0.1.13"
   },
   "devDependencies": {
-    "@openhps/video": "^0.1.11",
+    "@openhps/core": "^0.6.4",
+    "@openhps/video": "^0.1.13",
+    "@types/webxr": "^0.5.10",
     "cross-env": "^7.0.3"
   }
 }

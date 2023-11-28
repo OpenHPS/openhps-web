@@ -60,8 +60,20 @@ export class XRSource extends SourceNode<XRDataFrame> {
                 const viewport = baseLayer.getViewport(view);
                 gl.viewport(viewport.x, viewport.y, viewport.width, viewport.height);
                 const depthData = frame.getDepthInformation(view);
-                //const image = this._service.glBinding.getCameraImage(view.camera);
+                const image = this._service.glBinding.getCameraImage(view.camera);
                 dataFrame.depth = depthData;
+                dataFrame.texture = image;
+                dataFrame.height = view.camera.height;
+                dataFrame.width = view.camera.height;
+                // Create a new framebuffer for the image
+                const framebuffer = gl.createFramebuffer();
+                gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+                gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, dataFrame.texture, 0);
+
+                // Read the contents of the framebuffer
+                const data = new Uint8Array(dataFrame.width * dataFrame.height * 4);
+                gl.readPixels(0, 0, dataFrame.width, dataFrame.height, gl.RGBA, gl.UNSIGNED_BYTE, data);
+                dataFrame.image = data;
             }
 
             this._service.gl.bindFramebuffer(

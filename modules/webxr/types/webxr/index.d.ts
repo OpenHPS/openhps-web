@@ -266,3 +266,7 @@ interface XRPlane {
     polygon: Array<DOMPointReadOnly>;
     lastChangedTime: number;
 }
+
+interface Navigator {
+    xr?: any;
+}

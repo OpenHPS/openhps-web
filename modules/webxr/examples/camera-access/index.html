@@ -34,34 +34,15 @@
             const canvas = document.getElementById("depth");
             const ctx = canvas.getContext('2d');
             canvas.style = "display: block";
+            const service = new WebXRService();
             ModelBuilder.create()
-                .addService(new WebXRService())
+                .addService(service)
                 .from(new XRSource())
                 .to(new CallbackSinkNode(frame => {
-                    if (frame.depth) {
-                        const data = new Uint8Array(frame.depth.data);
-                        const imageData = ctx.createImageData(frame.depth.height, frame.depth.width);
-                        const minRange = 0;
-                        const maxRange = 5;
-                        // UGLY CODE INCOMMMINNGGG
-                        for (let j = 0 ; j < frame.depth.height ; j++) {
-                            for (let i = 0 ; i < frame.depth.width; i++) {
-                                const idx = (j * frame.depth.width + i) * 2;
-                                const zDistance = (data[idx] + (data[idx + 1] * 255)) * frame.depth.rawValueToMeters;
-                                const limitedRange = Math.min(Math.max(zDistance, minRange), maxRange);
-                                const color = 255 - Math.round((limitedRange / maxRange) * 255);
-                                const bufferImage = (i * frame.depth.height + (frame.depth.width - j + 1)) * 4;
-                                imageData.data[bufferImage] = color;
-                                imageData.data[bufferImage + 1] = color;
-                                imageData.data[bufferImage + 2] = color;   
-                                imageData.data[bufferImage + 3] = 255;
-                            }
-                        }
-                        ctx.putImageData(imageData, 0, 0);
-                    }
+                    console.log(frame.image);
                 }))
                 .build().then(model => {
-
+                    model.on('error', console.error);
                 }).catch(console.error);
         }
         </script>

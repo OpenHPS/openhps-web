@@ -1,4 +1,7 @@
+/// <reference types="webxr" />
+
 import { Service } from '@openhps/core';
+import { PerspectiveCamera } from '@openhps/core/dist/types/three/Three';
 
 export class WebXRService extends Service {
     private _session: XRSession = null;
@@ -30,10 +33,10 @@ export class WebXRService extends Service {
 
     private _onBuild(): Promise<void> {
         return new Promise((resolve, reject) => {
-            if (!(navigator as any).xr) {
+            if (!navigator.xr) {
                 return reject(new Error('WebXR is not supported!'));
             }
-            (navigator as any).xr
+            navigator.xr
                 .requestSession('immersive-ar', {
                     requiredFeatures: this.options.requiredFeatures,
                     depthSensing: {

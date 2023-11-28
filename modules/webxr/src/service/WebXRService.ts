@@ -1,7 +1,6 @@
 /// <reference types="webxr" />
 
 import { Service } from '@openhps/core';
-import { PerspectiveCamera } from '@openhps/core/dist/types/three/Three';
 
 export class WebXRService extends Service {
     private _session: XRSession = null;

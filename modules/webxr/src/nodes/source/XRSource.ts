@@ -52,6 +52,7 @@ export class XRSource extends SourceNode<XRDataFrame> {
         if (pose) {
             // Create XR Data Frame
             const dataFrame = new XRDataFrame();
+            dataFrame.source = this.source.clone();
 
             // Get camera view
             for (const view of pose.views) {
@@ -64,7 +65,10 @@ export class XRSource extends SourceNode<XRDataFrame> {
                 dataFrame.depth = depthData;
                 dataFrame.texture = image;
                 dataFrame.height = view.camera.height;
-                dataFrame.width = view.camera.height;
+                dataFrame.width = view.camera.width;
+                dataFrame.source.width = view.camera.width;
+                dataFrame.source.height = view.camera.height;
+
                 // Create a new framebuffer for the image
                 const framebuffer = gl.createFramebuffer();
                 gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);

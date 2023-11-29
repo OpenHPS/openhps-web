@@ -16,7 +16,7 @@ export class XRSource extends SourceNode<XRDataFrame> {
         this.options.source = this.options.source || new CameraObject(this.uid);
         this.options.output = this.options.output === undefined ? true : this.options.output;
 
-        this.on('build', this._initReferenceSpace.bind(this));
+        this.on('build', this._onBuild.bind(this));
         this.once('destroy', this._onDestroy.bind(this));
     }
 
@@ -24,22 +24,33 @@ export class XRSource extends SourceNode<XRDataFrame> {
         return super.source as CameraObject;
     }
 
-    private _initReferenceSpace(): Promise<void> {
+    private _onBuild(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this._service = this.model.findService<WebXRService>('WebXRService');
             if (this._service === undefined || this._service === null) {
                 return reject(new Error(`WebXR service was not added to model!`));
             }
+            if (this.options.autoStart) {
+                return this.start().then(resolve).catch(reject);
+            } else {
+                resolve();
+            }
+        });
+    }
 
+    start(): Promise<void> {
+        return new Promise((resolve, reject) => {
             // Request local reference spaces at the time this session was created
-            this._service.session.requestReferenceSpace('local').then((refSpace: XRReferenceSpace) => {
-                this.logger('debug', 'Local reference space created. Starting animation frames ...');
-                this._refSpace = refSpace;
+            this._service.session
+                .requestReferenceSpace('local')
+                .then((refSpace: XRReferenceSpace) => {
+                    this.logger('debug', 'Local reference space created. Starting animation frames ...');
+                    this._refSpace = refSpace;
 
-                this._service.session.requestAnimationFrame(this._onXRFrame.bind(this));
-            });
-
-            resolve();
+                    this._service.session.requestAnimationFrame(this._onXRFrame.bind(this));
+                    resolve();
+                })
+                .catch(reject);
         });
     }
 
@@ -142,4 +153,5 @@ export interface XRSourceOptions extends SourceNodeOptions {
      * @default true
      */
     output?: boolean;
+    autoStart?: boolean;
 }

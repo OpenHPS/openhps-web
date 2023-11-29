@@ -37,7 +37,9 @@
             const service = new WebXRService();
             ModelBuilder.create()
                 .addService(service)
-                .from(new XRSource())
+                .from(new XRSource({
+                    includeImage: true
+                }))
                 .to(new CallbackSinkNode(frame => {
                     console.log(frame.image);
                 }))

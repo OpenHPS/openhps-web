@@ -54,6 +54,7 @@
     "@openhps/core": "^0.6.4",
     "@openhps/video": "^0.1.13",
     "@types/webxr": "^0.5.10",
-    "cross-env": "^7.0.3"
+    "cross-env": "^7.0.3",
+    "serve": "^14.2.1"
   }
 }

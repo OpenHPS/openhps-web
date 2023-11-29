@@ -2,6 +2,9 @@
 
 import { Service } from '@openhps/core';
 
+/**
+ * WebXR service
+ */
 export class WebXRService extends Service {
     private _session: XRSession = null;
     protected options: WebXRServiceOptions;
@@ -32,6 +35,21 @@ export class WebXRService extends Service {
 
     private _onBuild(): Promise<void> {
         return new Promise((resolve, reject) => {
+            this.createSession()
+                .then(() => {
+                    resolve();
+                })
+                .catch(reject);
+        });
+    }
+
+    /**
+     * Create a new XR session
+     *
+     * @returns {Promise<XRSession>} XR session promise
+     */
+    createSession(): Promise<XRSession> {
+        return new Promise((resolve, reject) => {
             if (!navigator.xr) {
                 return reject(new Error('WebXR is not supported!'));
             }
@@ -50,7 +68,7 @@ export class WebXRService extends Service {
                     this._session.updateRenderState({
                         baseLayer: new XRWebGLLayer(this._session, this.gl),
                     });
-                    resolve();
+                    resolve(session);
                 })
                 .catch(reject);
         });

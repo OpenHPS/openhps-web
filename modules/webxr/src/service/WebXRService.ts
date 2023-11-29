@@ -13,7 +13,7 @@ export class WebXRService extends Service {
     constructor(options?: WebXRServiceOptions) {
         super();
         this.options = options || {};
-        this.options.autoStart = this.options.autoStart || true;
+        this.options.autoStart = this.options.autoStart === undefined ? false : this.options.autoStart;
         this.options.requiredFeatures = this.options.requiredFeatures || [
             'local',
             'hit-test',
@@ -23,8 +23,16 @@ export class WebXRService extends Service {
         ];
 
         if (!this.options.gl) {
-            const canvas = document.createElement('canvas');
-            document.body.appendChild(canvas);
+            let canvas = document.createElement('canvas');
+            if (this.options.canvas) {
+                if (typeof this.options.canvas === 'string') {
+                    canvas = document.getElementById(this.options.canvas) as HTMLCanvasElement;
+                } else {
+                    canvas = this.options.canvas;
+                }
+            } else {
+                document.body.appendChild(canvas);
+            }
             this.options.gl = canvas.getContext('webgl', { xrCompatible: true }) as WebGLRenderingContext;
         }
 
@@ -86,5 +94,6 @@ export class WebXRService extends Service {
 export interface WebXRServiceOptions {
     autoStart?: boolean;
     gl?: WebGLRenderingContext;
+    canvas?: HTMLCanvasElement | string;
     requiredFeatures?: string[];
 }

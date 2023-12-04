@@ -43,7 +43,6 @@ export class VideoSource extends SourceNode<VideoFrame<ImageData>> {
                 this.canvas = document.createElement('canvas');
                 this.canvas.id = `_OpenHPS-${this.uid}`;
                 this.canvas.setAttribute('style', 'display: none');
-                document.body.append(this.canvas);
             }
             // Get canvas context
             this.context = this.canvas.getContext('2d');

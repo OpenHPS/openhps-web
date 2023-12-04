@@ -3,9 +3,9 @@
 
 
 "@openhps/core@^0.6.4":
-  version "0.6.4"
-  resolved "https://registry.yarnpkg.com/@openhps/core/-/core-0.6.4.tgz#6c005195c46c1b04c4d8370d5132f6d4c55119d2"
-  integrity sha512-7quZy+uhKbmZiCkl5LxvBuyqZnr8LWyCDqGJkXoHdd3vLoWGT78FDYBO2ANxiYiBbrHIQoIcXCCj197ogzOcSw==
+  version "0.6.5"
+  resolved "https://registry.yarnpkg.com/@openhps/core/-/core-0.6.5.tgz#59b7babb3946bec76ee27d4a44fc18b43ce4a45f"
+  integrity sha512-HqriOeRvkuMfA2WMWrcKC6Gk4orwMt1BxYy4tcrUHktTns4Va+rFAiu5bZrXPbtXfikBGONP/YnX4l5GNJ14hA==
   dependencies:
     lodash.clonedeep "^4.5.0"
     reflect-metadata ">=0.1.13"
@@ -14,9 +14,9 @@
     uuid "^9.0.1"
 
 "@openhps/video@^0.1.13":
-  version "0.1.13"
-  resolved "https://registry.yarnpkg.com/@openhps/video/-/video-0.1.13.tgz#b757f9e2de82c81cbf1fbda7c7ed2fb75f617342"
-  integrity sha512-AZF+y7tvXY9ntioOzNxXRYnON4wlmBdO/XqDoR1gocSzeKd+1IoUlDFt7Oet6e7t4cqpYxsxfySf4ZTUD8Vp4Q==
+  version "0.1.14"
+  resolved "https://registry.yarnpkg.com/@openhps/video/-/video-0.1.14.tgz#146018fbd075b7f7aa627df467ae6424d414933f"
+  integrity sha512-BgUDHW0sXwiQHKtaL+oQRaJ+wOe8LfgWEq4n0UYWrv0NEGePP4fQKgWSk6NiR/EEpVPJmBjPMyfC7YUUaBLoHQ==
 
 "@types/webxr@^0.5.10":
   version "0.5.10"

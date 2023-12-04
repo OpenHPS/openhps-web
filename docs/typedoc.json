@@ -5,7 +5,8 @@
         "../modules/web-bluetooth",
         "../modules/web-geolocation",
         "../modules/web-sensors",
-        "../modules/webxr"
+        "../modules/webxr",
+        "../modules/webrtc"
     ],
     "excludePrivate": true,
     "hideGenerator": true,

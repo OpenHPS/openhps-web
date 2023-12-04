@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Web Example</title>
+        <link rel="stylesheet" href="css/styles.css">
+    </head>
+    <body>
+        <button id="start" disabled>Start Test</button>
+
+        <div id="result">
+            Click the start button to test the component.
+        </div>
+
+        <video id="videoRef" width="100%"></video>
+
+        <script type="module">
+            import { 
+                ModelBuilder, 
+                CallbackSinkNode, 
+                DataObject,
+                Magnetometer,
+                Accelerometer,
+                Gyroscope,
+                LinearAccelerationSensor
+            } from './js/openhps-core.es.min.js';
+            import { VideoSource } from './js/openhps-webrtc.es.min.js';
+
+            var source = new VideoSource({
+                uid: "source",
+                autoStart: true,
+                fps: 30,
+                videoSource: "videoRef",
+                height: 720,
+                width: 1024
+            });
+
+            source.on('error', console.error);
+           
+            const btn =  document.getElementById("start");
+            btn.onclick = () => source.play();
+            
+            ModelBuilder.create()
+                .from(source)
+                .to(new CallbackSinkNode(frame => {
+                    console.log(frame);
+                }))
+                .build().then(() => {
+                    btn.disabled = false;
+                }).catch(console.error);
+        </script>
+    </body>
+</html>

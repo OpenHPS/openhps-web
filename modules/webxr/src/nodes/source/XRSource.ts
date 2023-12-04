@@ -149,7 +149,6 @@ export interface XRSourceOptions extends SourceNodeOptions {
     includeImage?: boolean;
     /**
      * Show the output in the frame buffer
-     *
      * @default true
      */
     output?: boolean;

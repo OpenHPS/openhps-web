@@ -1,0 +1,59 @@
+{
+  "name": "@openhps/webrtc",
+  "version": "1.0.0",
+  "description": "Open Hybrid Positioning System - WebRTC API",
+  "author": "Maxim Van de Wynckel",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OpenHPS/openhps-web.git"
+  },
+  "bugs": {
+    "url": "https://github.com/OpenHPS/openhps-web/issues"
+  },
+  "homepage": "https://openhps.org",
+  "publishConfig": {
+    "access": "public"
+  },
+  "sideEffects": false,
+  "main": "./dist/cjs/index.js",
+  "types": "./dist/types/index.d.ts",
+  "unpkg": "./dist/web/openhps-webrtc.min.js",
+  "jsdelivr": "./dist/web/openhps-webrtc.min.js",
+  "module": "./dist/esm5/index.js",
+  "es2015": "./dist/esm/index.js",
+  "files": [
+    "dist/**/*",
+    "src/**/*"
+  ],
+  "keywords": [
+    "openhps",
+    "web"
+  ],
+  "scripts": {
+    "test": "cross-env ../../node_modules/.bin/mocha --config test/.mocharc.json",
+    "cover": "cross-env ../../node_modules/.bin/nyc cross-env ../../node_modules/.bin/mocha --config test/.mocharc.json && cross-env ../../node_modules/.bin/nyc report --reporter=cobertura",
+    "cover:ci": "cross-env ../../node_modules/.bin/nyc cross-env ../../node_modules/.bin/mocha --config test/.mocharc.json --reporter mocha-junit-reporter && cross-env ../../node_modules/.bin/nyc report --reporter=cobertura",
+    "build": "cross-env ../../node_modules/.bin/npm-run-all --parallel build:ts:* && npm run build:webpack",
+    "build:quick": "cross-env ../../node_modules/.bin/npm-run-all --parallel build:ts:* && npm run build:webpack",
+    "build:typedoc": "cross-env ../../node_modules/.bin/typedoc --options docs/typedoc.json",
+    "build:ts:cjs": "cross-env ../../node_modules/.bin/tsc --build tsconfig/tsconfig.bundle.cjs.json",
+    "build:ts:esm": "cross-env ../../node_modules/.bin/tsc --build tsconfig/tsconfig.bundle.esm.json",
+    "build:ts:esm5": "cross-env ../../node_modules/.bin/tsc --build tsconfig/tsconfig.bundle.esm5.json",
+    "build:ts:types": "cross-env ../../node_modules/.bin/tsc --build tsconfig/tsconfig.bundle.types.json",
+    "build:webpack": "cross-env ../../node_modules/.bin/npm-run-all --parallel build:webpack:*",
+    "build:webpack:prod": "cross-env ../../node_modules/.bin/webpack --env prod --",
+    "build:webpack:dev": "cross-env ../../node_modules/.bin/webpack --env dev --"
+  },
+  "peerDependencies": {
+    "@openhps/core": ">=0.5.3"
+  },
+  "devDependencies": {
+    "@types/web": "^0.0.114",
+    "@types/webrtc": "^0.0.41",
+    "cross-env": "^7.0.3"
+  },
+  "dependencies": {
+    "@openhps/video": "^0.1.14"
+  }
+}

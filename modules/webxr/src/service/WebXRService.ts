@@ -53,6 +53,7 @@ export class WebXRService extends Service {
 
     /**
      * Create a new XR session
+     *
      * @returns {Promise<XRSession>} XR session promise
      */
     createSession(): Promise<XRSession> {

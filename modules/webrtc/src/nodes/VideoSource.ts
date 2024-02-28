@@ -68,6 +68,7 @@ export class VideoSource extends SourceNode<VideoFrame<ImageData>> {
 
     /**
      * Start playback of the video stream
+     *
      * @returns {number} Running frame grab timer
      */
     play(): NodeJS.Timer {
@@ -142,6 +143,7 @@ export class VideoSource extends SourceNode<VideoFrame<ImageData>> {
 
     /**
      * Pull the next frame
+     *
      * @returns {Promise<VideoSource>} Pull promise
      */
     onPull(): Promise<VideoFrame> {
@@ -174,6 +176,7 @@ export class VideoSource extends SourceNode<VideoFrame<ImageData>> {
 
     /**
      * Load video from file, stream, port
+     *
      * @param {string | HTMLVideoElement} videoSource File path
      * @returns {VideoSource} Video source instance
      */
@@ -245,6 +248,7 @@ export interface VideoSourceOptions extends SourceNodeOptions, MediaTrackConstra
     height?: number;
     /**
      * Frames to skip
+     *
      * @default 1
      */
     frameSkip?: number;

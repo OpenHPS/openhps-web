@@ -48,6 +48,9 @@ export class SensorSourceNode extends SourceNode<DataFrame> implements SensorSou
 
     static requestPermissions(sensors: SensorType[]): Promise<boolean> {
         return new Promise((resolve, reject) => {
+            if (navigator.permissions === undefined) {
+                return resolve(true);
+            }
             Promise.all(
                 sensors
                     .map((sensor) =>

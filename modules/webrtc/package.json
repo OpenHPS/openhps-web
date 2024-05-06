@@ -1,6 +1,6 @@
 {
   "name": "@openhps/webrtc",
-  "version": "0.1.15",
+  "version": "0.1.16",
   "description": "Open Hybrid Positioning System - WebRTC API",
   "author": "Maxim Van de Wynckel",
   "license": "Apache-2.0",

@@ -26,7 +26,8 @@ export class VideoSource extends SourceNode<VideoFrame<ImageData>> {
     private _onBuild(): Promise<void> {
         return new Promise((resolve, reject) => {
             navigator.getUserMedia =
-                navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+                navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia ||
+                navigator.mediaDevices.getUserMedia || navigator.msGetUserMedia;
 
             if (navigator.getUserMedia === undefined) {
                 throw new Error(`getUserMedia is not supported by the browser!`);

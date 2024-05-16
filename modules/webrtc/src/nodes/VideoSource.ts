@@ -194,7 +194,13 @@ export class VideoSource extends SourceNode<VideoFrame<ImageData>> {
             this.getUserMedia.call(
                 this.mediaContext,
                 {
-                    video: this.options,
+                    video: {
+                        facingMode: 'environment',
+                        width: this.options.width,
+                        height: this.options.height,
+                        videoSource: this.options.videoSource,
+                        frameRate: { ideal: this.options.fps },
+                    },
                     audio: this.options.audio,
                 },
                 (stream: MediaStream) => {

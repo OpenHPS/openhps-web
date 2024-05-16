@@ -16,6 +16,9 @@ export class VideoSource extends SourceNode<VideoFrame<ImageData>> {
     protected canvas: HTMLCanvasElement;
     protected context: CanvasRenderingContext2D;
 
+    private getUserMedia: any;
+    private mediaContext: any;
+
     constructor(options?: VideoSourceOptions) {
         super(options);
         this.options.source = this.options.source || new CameraObject(this.uid, undefined);
@@ -25,14 +28,14 @@ export class VideoSource extends SourceNode<VideoFrame<ImageData>> {
 
     private _onBuild(): Promise<void> {
         return new Promise((resolve, reject) => {
-            navigator.getUserMedia =
-                navigator.getUserMedia ||
-                navigator.webkitGetUserMedia ||
-                navigator.mozGetUserMedia ||
-                navigator.mediaDevices.getUserMedia ||
-                navigator.msGetUserMedia;
+            this.mediaContext = navigator.mediaDevices || navigator;
+            this.getUserMedia =
+                this.mediaContext.getUserMedia ||
+                this.mediaContext.webkitGetUserMedia ||
+                this.mediaContext.mozGetUserMedia ||
+                this.mediaContext.msGetUserMedia;
 
-            if (navigator.getUserMedia === undefined) {
+            if (this.getUserMedia === undefined) {
                 throw new Error(`getUserMedia is not supported by the browser!`);
             }
 
@@ -188,7 +191,8 @@ export class VideoSource extends SourceNode<VideoFrame<ImageData>> {
             } else {
                 this.video = videoSource;
             }
-            navigator.getUserMedia(
+            this.getUserMedia.call(
+                this.mediaContext,
                 {
                     video: this.options,
                     audio: this.options.audio,

@@ -25,7 +25,7 @@ export class VideoSource extends SourceNode<VideoFrame<ImageData>> {
 
     private getUserMedia(): (constraints: MediaStreamConstraints) => Promise<MediaStream> {
         if (navigator.mediaDevices) {
-            return navigator.mediaDevices.getUserMedia;
+            return (constraints) => navigator.mediaDevices.getUserMedia(constraints);
         } else {
             const getUserMedia: any =
                 navigator.getUserMedia ||
@@ -129,9 +129,11 @@ export class VideoSource extends SourceNode<VideoFrame<ImageData>> {
 
     stop(): void {
         this.pause();
-        this.stream.getTracks().forEach((t) => {
-            t.stop();
-        });
+        if (this.stream) {
+            this.stream.getTracks().forEach((t) => {
+                t.stop();
+            });
+        }
     }
 
     pause(): void {

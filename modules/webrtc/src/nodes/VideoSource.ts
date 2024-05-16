@@ -16,9 +16,6 @@ export class VideoSource extends SourceNode<VideoFrame<ImageData>> {
     protected canvas: HTMLCanvasElement;
     protected context: CanvasRenderingContext2D;
 
-    private getUserMedia: any;
-    private mediaContext: any;
-
     constructor(options?: VideoSourceOptions) {
         super(options);
         this.options.source = this.options.source || new CameraObject(this.uid, undefined);
@@ -26,19 +23,28 @@ export class VideoSource extends SourceNode<VideoFrame<ImageData>> {
         this.once('destroy', this.stop.bind(this));
     }
 
-    private _onBuild(): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this.mediaContext = navigator.mediaDevices || navigator;
-            this.getUserMedia =
-                this.mediaContext.getUserMedia ||
-                this.mediaContext.webkitGetUserMedia ||
-                this.mediaContext.mozGetUserMedia ||
-                this.mediaContext.msGetUserMedia;
-
+    private getUserMedia(): (constraints: MediaStreamConstraints) => Promise<MediaStream> {
+        if (navigator.mediaDevices) {
+            return navigator.mediaDevices.getUserMedia;
+        } else {
+            const getUserMedia: any =
+                navigator.getUserMedia ||
+                navigator.webkitGetUserMedia ||
+                navigator.mozGetUserMedia ||
+                navigator.msGetUserMedia;
             if (this.getUserMedia === undefined) {
                 throw new Error(`getUserMedia is not supported by the browser!`);
             }
+            return (constraints) =>
+                new Promise((resolve, reject) => {
+                    getUserMedia.call(navigator, constraints, resolve, reject);
+                });
+        }
+    }
 
+    private _onBuild(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.getUserMedia();
             // Create a canvas element
             if (this.options.canvas) {
                 if (typeof this.options.canvas === 'string') {
@@ -191,19 +197,17 @@ export class VideoSource extends SourceNode<VideoFrame<ImageData>> {
             } else {
                 this.video = videoSource;
             }
-            this.getUserMedia.call(
-                this.mediaContext,
-                {
-                    video: {
-                        facingMode: 'environment',
-                        width: this.options.width,
-                        height: this.options.height,
-                        videoSource: this.options.videoSource,
-                        frameRate: { ideal: this.options.fps },
-                    },
-                    audio: this.options.audio,
+            this.getUserMedia()({
+                video: {
+                    facingMode: 'environment',
+                    width: this.options.width,
+                    height: this.options.height,
+                    ...(this.options.fps ? { frameRate: { ideal: this.options.fps } } : {}),
                 },
-                (stream: MediaStream) => {
+                audio: this.options.audio,
+            })
+                .then((stream: MediaStream) => {
+                    this.logger('info', 'Video stream loaded', stream);
                     this.stream = stream;
                     this.video.srcObject = stream;
                     this.video.onloadedmetadata = () => {
@@ -213,12 +217,11 @@ export class VideoSource extends SourceNode<VideoFrame<ImageData>> {
                         this.canvas.height = this.video.videoHeight;
                         resolve();
                     };
-                },
-                (err) => {
+                })
+                .catch((err) => {
                     this.logger('error', err.name + ': ' + err.message, err);
                     reject(err);
-                },
-            );
+                });
         });
     }
 

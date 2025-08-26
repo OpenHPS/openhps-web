@@ -10,6 +10,5 @@
     ],
     "excludePrivate": true,
     "hideGenerator": true,
-    "categorizeByGroup": true,
-    "media": "media"
+    "categorizeByGroup": true
 }

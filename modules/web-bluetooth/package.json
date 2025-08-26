@@ -1,6 +1,6 @@
 {
   "name": "@openhps/web-bluetooth",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Open Hybrid Positioning System - Web Bluetooth Scanning API",
   "author": "Maxim Van de Wynckel",
   "license": "Apache-2.0",

@@ -31,7 +31,7 @@ export class SensorSourceNode extends SourceNode<DataFrame> implements SensorSou
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    requestPermission(...args: any[]): Promise<void> {
+    static requestPermission(...args: any[]): Promise<void> {
         return Promise.resolve();
     }
 

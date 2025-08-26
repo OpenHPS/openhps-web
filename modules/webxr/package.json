@@ -1,6 +1,6 @@
 {
   "name": "@openhps/webxr",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Open Hybrid Positioning System - WebXR",
   "author": "Maxim Van de Wynckel",
   "license": "Apache-2.0",

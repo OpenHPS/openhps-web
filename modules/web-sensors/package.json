@@ -1,6 +1,6 @@
 {
   "name": "@openhps/web-sensors",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Open Hybrid Positioning System - Web Sensors API",
   "author": "Maxim Van de Wynckel",
   "license": "Apache-2.0",

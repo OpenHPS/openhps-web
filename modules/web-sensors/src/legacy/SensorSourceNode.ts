@@ -32,6 +32,13 @@ export class SensorSourceNode extends SourceNode<DataFrame> implements SensorSou
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     static requestPermissions(...args: any[]): Promise<void> {
+        if (typeof (DeviceMotionEvent as any).requestPermission === 'function') {
+            return (DeviceMotionEvent as any).requestPermission().then((response: string) => {
+                if (response !== 'granted') {
+                    return Promise.reject(new Error('Permission to access device motion was denied.'));
+                }
+            });
+        }
         return Promise.resolve();
     }
 

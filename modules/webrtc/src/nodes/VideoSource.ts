@@ -81,7 +81,7 @@ export class VideoSource extends SourceNode<VideoFrame<ImageData>> {
 
     /**
      * Start playback of the video stream
-     * @returns {number} Running frame grab timer
+     * @returns Running frame grab timer
      */
     play(): NodeJS.Timer {
         let ready = false;
@@ -157,7 +157,7 @@ export class VideoSource extends SourceNode<VideoFrame<ImageData>> {
 
     /**
      * Pull the next frame
-     * @returns {Promise<VideoSource>} Pull promise
+     * @returns Pull promise
      */
     onPull(): Promise<VideoFrame> {
         return this._readFrame();
@@ -189,8 +189,8 @@ export class VideoSource extends SourceNode<VideoFrame<ImageData>> {
 
     /**
      * Load video from file, stream, port
-     * @param {string | HTMLVideoElement} videoSource File path
-     * @returns {VideoSource} Video source instance
+     * @param videoSource File path
+     * @returns Video source instance
      */
     load(videoSource: string | HTMLVideoElement): Promise<void> {
         return new Promise((resolve, reject) => {

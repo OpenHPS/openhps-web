@@ -56,7 +56,8 @@
         "typescript-eslint": "^8.66.0",
         "webpack": "^5.101.3",
         "webpack-bundle-analyzer": "^4.10.2",
-        "webpack-cli": "^6.0.1"
+        "webpack-cli": "^6.0.1",
+        "terser-webpack-plugin": "^5.3.14"
     },
     "engines": {
         "node": ">=22.0.0"

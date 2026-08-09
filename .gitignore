@@ -6,3 +6,8 @@ artifacts/
 .nyc_output/
 test-results.xml
 yarn-error.log
+
+# OpenHPS baseline
+.cache/
+xunit.xml
+.DS_Store

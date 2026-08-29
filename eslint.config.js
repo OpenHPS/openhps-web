@@ -1,67 +1,92 @@
-const {
-    defineConfig,
-} = require("eslint/config");
+const globals = require('globals');
+const js = require('@eslint/js');
+const tseslint = require('typescript-eslint');
+const importPlugin = require('eslint-plugin-import');
+const jsdoc = require('eslint-plugin-jsdoc');
+const prettierRecommended = require('eslint-plugin-prettier/recommended');
 
-const globals = require("globals");
-const tsParser = require("@typescript-eslint/parser");
-const typescriptEslint = require("@typescript-eslint/eslint-plugin");
-const _import = require("eslint-plugin-import");
-const jsdoc = require("eslint-plugin-jsdoc");
-const prettier = require("eslint-plugin-prettier");
+/**
+ * Paths this module generates or vendors, which must not be linted.
+ * Populated per repo by the streamline codemod.
+ */
+const EXTRA_IGNORES = [];
 
-const {
-    fixupPluginRules,
-    fixupConfigRules,
-} = require("@eslint/compat");
-
-const js = require("@eslint/js");
-
-const {
-    FlatCompat,
-} = require("@eslint/eslintrc");
-
-const compat = new FlatCompat({
-    baseDirectory: __dirname,
-    recommendedConfig: js.configs.recommended,
-    allConfig: js.configs.all
-});
-
-module.exports = defineConfig([{
-    languageOptions: {
-        globals: {
-            ...globals.browser,
-            ...globals.node,
+module.exports = tseslint.config(
+    {
+        ignores: [
+            'dist/**',
+            'coverage/**',
+            '.nyc_output/**',
+            'docs/out/**',
+            'examples/**',
+            'node_modules/**',
+            '**/*.js',
+            '**/*.cjs',
+            '**/*.mjs',
+            '**/*.d.ts',
+            ...EXTRA_IGNORES,
+        ],
+    },
+    js.configs.recommended,
+    ...tseslint.configs.recommended,
+    // Registers the .ts resolver extensions. Load-bearing, not cosmetic:
+    // without it `import/no-cycle` resolves nothing and silently passes.
+    importPlugin.flatConfigs.recommended,
+    importPlugin.flatConfigs.typescript,
+    jsdoc.configs['flat/recommended-typescript'],
+    // Must stay last so it can switch off the stylistic rules it replaces.
+    prettierRecommended,
+    {
+        files: ['**/*.ts'],
+        languageOptions: {
+            ecmaVersion: 2022,
+            sourceType: 'module',
+            globals: { ...globals.browser, ...globals.node },
+            parserOptions: {},
         },
-
-        parser: tsParser,
-        "sourceType": "module",
-        parserOptions: {},
+        rules: {
+            '@typescript-eslint/no-explicit-any': 'off',
+            '@typescript-eslint/explicit-module-boundary-types': 'off',
+            '@typescript-eslint/no-empty-interface': 'off',
+            '@typescript-eslint/no-empty-object-type': 'off',
+            '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+            '@typescript-eslint/no-require-imports': 'off',
+            // Replaces the archived eslint-plugin-deprecation. Requires type
+            // information, so it is off where there is no tsconfig project.
+            '@typescript-eslint/no-deprecated': 'off',
+            // Only became effective with this config: the previous setups declared the
+            // rule but never loaded the TypeScript resolver, so it silently matched
+            // nothing. Pre-existing cycles are therefore reported as warnings rather
+            // than blocking the toolchain migration; promote to 'error' per repo as
+            // each module's cycles are resolved.
+            'import/no-cycle': ['warn', { maxDepth: 15 }],
+            'import/no-unresolved': 'off',
+            // Cannot validate computed access into a TypeScript namespace import
+            // (e.g. Spaces[key]), and it is one of the slowest rules in the set.
+            'import/namespace': 'off',
+            'jsdoc/check-tag-names': ['error', { definedTags: ["category","rdf"] }],
+            'jsdoc/require-jsdoc': 'off',
+            'jsdoc/require-param-type': 'off',
+            'jsdoc/require-returns-type': 'off',
+            // OpenHPS documents parameter types in JSDoc deliberately — TypeDoc
+            // renders them — so the "types are redundant in TS" rule does not apply.
+            'jsdoc/no-types': 'off',
+            'prettier/prettier': 'error',
+        },
     },
-
-    plugins: {
-        import: fixupPluginRules(_import),
-        prettier,
+    {
+        files: ['**/test/**/*.ts'],
+        rules: {
+            'jsdoc/require-returns': 'off',
+            'jsdoc/require-param': 'off',
+            // chai's `expect(x).to.be.true` is an expression statement by design.
+            '@typescript-eslint/no-unused-expressions': 'off',
+            // Fixtures deliberately exercise patterns the serializer must cope
+            // with: class/interface declaration merging, `Object` as a type, and
+            // `new Array()`. These are the subject under test, not defects.
+            '@typescript-eslint/no-unsafe-declaration-merging': 'off',
+            '@typescript-eslint/no-wrapper-object-types': 'off',
+            '@typescript-eslint/no-array-constructor': 'off',
+        },
     },
-
-    "rules": {
-        "@typescript-eslint/no-explicit-any": "off",
-        "@typescript-eslint/explicit-module-boundary-types": "off",
-        "import/no-cycle": "error",
-        "import/no-unresolved": "off",
-        "prettier/prettier": ["error"],
-
-        "jsdoc/check-tag-names": ["error", {
-            "definedTags": ["category"],
-        }],
-    },
-
-    extends: fixupConfigRules(compat.extends(
-        "eslint:recommended",
-        "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:eslint-plugin-jsdoc/recommended",
-        "plugin:eslint-plugin-import/recommended",
-        "plugin:import/typescript",
-        "prettier",
-    )),
-}]);
+);

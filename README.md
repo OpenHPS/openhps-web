@@ -12,7 +12,7 @@
     <a href="https://codeclimate.com/github/OpenHPS/openhps-web/" target="_blank">
         <img alt="Maintainability" src="https://img.shields.io/codeclimate/maintainability/OpenHPS/openhps-web">
     </a>
-    <a href="https://badge.fury.io/js/@openhps%web">
+    <a href="https://badge.fury.io/js/@openhps%2Fweb">
         <img src="https://badge.fury.io/js/@openhps%2Fweb.svg" alt="npm version" height="18">
     </a>
 </p>
@@ -42,7 +42,7 @@ to create unit tests for new features.
 The framework is open source and is mainly developed by Dr. Maxim Van de Wynckel as part of his research towards *Interoperable and Discoverable Indoor Positioning Systems* under the supervision of Prof. Dr. Beat Signer.
 
 ## Contributing
-Use of OpenHPS, contributions and feedback is highly appreciated. Please read our [contributing guidelines](CONTRIBUTING.md) for more information.
+Use of OpenHPS, contributions and feedback is highly appreciated. Please read our [contributing guidelines](https://github.com/OpenHPS/.github/blob/HEAD/CONTRIBUTING.md) for more information.
 
 ## License
 Copyright (C) 2019-2025 Maxim Van de Wynckel & Vrije Universiteit Brussel

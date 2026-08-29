@@ -1,60 +1,67 @@
 {
-  "name": "@openhps/webxr",
-  "version": "1.0.4",
-  "description": "Open Hybrid Positioning System - WebXR",
-  "author": "Maxim Van de Wynckel",
-  "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/OpenHPS/openhps-web.git"
-  },
-  "bugs": {
-    "url": "https://github.com/OpenHPS/openhps-web/issues"
-  },
-  "homepage": "https://openhps.org",
-  "publishConfig": {
-    "access": "public"
-  },
-  "sideEffects": false,
-  "main": "./dist/cjs/index.js",
-  "types": "./dist/types/index.d.ts",
-  "unpkg": "./dist/web/openhps-webxr.min.js",
-  "jsdelivr": "./dist/web/openhps-webxr.min.js",
-  "module": "./dist/esm5/index.js",
-  "es2015": "./dist/esm/index.js",
-  "files": [
-    "dist/**/*",
-    "src/**/*"
-  ],
-  "keywords": [
-    "openhps",
-    "web"
-  ],
-  "scripts": {
-    "example": "shx cp node_modules/@openhps/*/dist/web/*.js examples/common/ && shx cp dist/web/*.js examples/common/ && serve ./examples --ssl-cert ./examples/cert/server.crt --ssl-key ./examples/cert/key.pem",
-    "test": "cross-env ../../node_modules/.bin/mocha --config test/.mocharc.json",
-    "cover": "cross-env ../../node_modules/.bin/nyc cross-env ../../node_modules/.bin/mocha --config test/.mocharc.json && cross-env ../../node_modules/.bin/nyc report --reporter=cobertura",
-    "cover:ci": "cross-env ../../node_modules/.bin/nyc cross-env ../../node_modules/.bin/mocha --config test/.mocharc.json --reporter mocha-junit-reporter && cross-env ../../node_modules/.bin/nyc report --reporter=cobertura",
-    "build": "cross-env ../../node_modules/.bin/npm-run-all --parallel build:ts:* && npm run build:webpack",
-    "build:quick": "cross-env ../../node_modules/.bin/npm-run-all --parallel build:ts:* && npm run build:webpack",
-    "build:typedoc": "cross-env ../../node_modules/.bin/typedoc --options docs/typedoc.json",
-    "build:ts:cjs": "cross-env ../../node_modules/.bin/tsc --build tsconfig/tsconfig.bundle.cjs.json",
-    "build:ts:esm": "cross-env ../../node_modules/.bin/tsc --build tsconfig/tsconfig.bundle.esm.json",
-    "build:ts:esm5": "cross-env ../../node_modules/.bin/tsc --build tsconfig/tsconfig.bundle.esm5.json",
-    "build:ts:types": "cross-env ../../node_modules/.bin/tsc --build tsconfig/tsconfig.bundle.types.json",
-    "build:webpack": "cross-env ../../node_modules/.bin/npm-run-all --parallel build:webpack:*",
-    "build:webpack:prod": "cross-env ../../node_modules/.bin/webpack --env prod --",
-    "build:webpack:dev": "cross-env ../../node_modules/.bin/webpack --env dev --"
-  },
-  "peerDependencies": {
-    "@openhps/core": ">=0.6.4",
-    "@openhps/video": ">=0.1.13"
-  },
-  "devDependencies": {
-    "@openhps/core": "^1.0.16",
-    "@openhps/video": "^1.0.1",
-    "@types/webxr": "^0.5.22",
-    "cross-env": "^10.0.0",
-    "serve": "^14.2.4"
-  }
+    "name": "@openhps/webxr",
+    "version": "1.0.4",
+    "description": "Open Hybrid Positioning System - WebXR",
+    "author": "Maxim Van de Wynckel",
+    "license": "Apache-2.0",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/OpenHPS/openhps-web.git"
+    },
+    "bugs": {
+        "url": "https://github.com/OpenHPS/openhps-web/issues"
+    },
+    "homepage": "https://openhps.org",
+    "publishConfig": {
+        "access": "public"
+    },
+    "sideEffects": false,
+    "main": "./dist/cjs/index.js",
+    "types": "./dist/types/index.d.ts",
+    "unpkg": "./dist/web/openhps-webxr.min.js",
+    "jsdelivr": "./dist/web/openhps-webxr.min.js",
+    "module": "./dist/esm/index.js",
+    "es2015": "./dist/esm/index.js",
+    "files": [
+        "dist/**/*",
+        "src/**/*"
+    ],
+    "keywords": [
+        "openhps",
+        "web"
+    ],
+    "scripts": {
+        "example": "shx cp node_modules/@openhps/*/dist/web/*.js examples/common/ && shx cp dist/web/*.js examples/common/ && serve ./examples --ssl-cert ./examples/cert/server.crt --ssl-key ./examples/cert/key.pem",
+        "test": "cross-env ../../node_modules/.bin/mocha --config test/.mocharc.json",
+        "cover": "cross-env ../../node_modules/.bin/c8 cross-env ../../node_modules/.bin/mocha --config test/.mocharc.json && cross-env ../../node_modules/.bin/c8 report --reporter=cobertura",
+        "cover:ci": "cross-env ../../node_modules/.bin/c8 cross-env ../../node_modules/.bin/mocha --config test/.mocharc.json --reporter mocha-junit-reporter && cross-env ../../node_modules/.bin/c8 report --reporter=cobertura",
+        "build": "cross-env ../../node_modules/.bin/npm-run-all --parallel build:ts:* && npm run build:webpack",
+        "build:quick": "cross-env ../../node_modules/.bin/npm-run-all --parallel build:ts:* && npm run build:webpack",
+        "build:typedoc": "cross-env ../../node_modules/.bin/typedoc --options docs/typedoc.json",
+        "build:ts:cjs": "cross-env ../../node_modules/.bin/tsc --build tsconfig/tsconfig.bundle.cjs.json",
+        "build:ts:esm": "cross-env ../../node_modules/.bin/tsc --build tsconfig/tsconfig.bundle.esm.json && node ../../scripts/finalize-esm.mjs .",
+        "build:ts:types": "cross-env ../../node_modules/.bin/tsc --build tsconfig/tsconfig.bundle.types.json",
+        "build:webpack": "cross-env ../../node_modules/.bin/npm-run-all --parallel build:webpack:*",
+        "build:webpack:prod": "cross-env ../../node_modules/.bin/webpack --env prod --",
+        "build:webpack:dev": "cross-env ../../node_modules/.bin/webpack --env dev --"
+    },
+    "peerDependencies": {
+        "@openhps/core": ">=1.0.16 <2",
+        "@openhps/video": ">=1.0.3 <2"
+    },
+    "devDependencies": {
+        "@openhps/core": "^1.0.16",
+        "@openhps/video": "^1.0.3",
+        "@types/webxr": "^0.5.22",
+        "cross-env": "^10.0.0",
+        "serve": "^14.2.4"
+    },
+    "exports": {
+        ".": {
+            "types": "./dist/types/index.d.ts",
+            "import": "./dist/esm/index.js",
+            "require": "./dist/cjs/index.js"
+        },
+        "./package.json": "./package.json"
+    }
 }

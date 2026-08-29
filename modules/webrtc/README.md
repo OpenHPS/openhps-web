@@ -12,8 +12,8 @@
     <a href="https://codeclimate.com/github/OpenHPS/openhps-web/" target="_blank">
         <img alt="Maintainability" src="https://img.shields.io/codeclimate/maintainability/OpenHPS/openhps-web">
     </a>
-    <a href="https://badge.fury.io/js/@openhps%web">
-        <img src="https://badge.fury.io/js/@openhps%2Fweb.svg" alt="npm version" height="18">
+    <a href="https://badge.fury.io/js/@openhps%2Fwebrtc">
+        <img src="https://badge.fury.io/js/@openhps%2Fwebrtc" alt="npm version" height="18">
     </a>
 </p>
 

@@ -51,7 +51,7 @@
     "devDependencies": {
         "@openhps/rf": "^1.0.4",
         "@types/web-bluetooth": "^0.0.16",
-        "cross-env": "^7.0.3",
+        "cross-env": "^10.1.0",
         "@openhps/core": "^1.0.16"
     },
     "exports": {

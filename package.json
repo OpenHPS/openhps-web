@@ -22,9 +22,9 @@
         "prepare": "husky"
     },
     "devDependencies": {
-        "@babel/cli": "^7.28.3",
-        "@babel/core": "^7.28.3",
-        "@babel/preset-env": "^7.28.3",
+        "@babel/cli": "^8.0.4",
+        "@babel/core": "^8.0.1",
+        "@babel/preset-env": "^8.0.2",
         "@commitlint/cli": "^19.8.1",
         "@commitlint/config-conventional": "^19.8.1",
         "@eslint/js": "^9.34.0",
@@ -55,8 +55,8 @@
         "typescript": "^5.9.3",
         "typescript-eslint": "^8.66.0",
         "webpack": "^5.101.3",
-        "webpack-bundle-analyzer": "^4.10.2",
-        "webpack-cli": "^6.0.1",
+        "webpack-bundle-analyzer": "^5.3.2",
+        "webpack-cli": "^7.2.2",
         "terser-webpack-plugin": "^5.3.14"
     },
     "engines": {

@@ -48,8 +48,8 @@
         "@openhps/core": ">=1.0.16 <2"
     },
     "devDependencies": {
-        "@types/web": "^0.0.114",
-        "@types/webrtc": "^0.0.41",
+        "@types/web": "^0.0.356",
+        "@types/webrtc": "^0.0.47",
         "cross-env": "^7.0.3",
         "@openhps/core": "^1.0.16"
     },

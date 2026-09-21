@@ -48,10 +48,10 @@
         "@openhps/core": ">=1.0.16 <2"
     },
     "devDependencies": {
-        "@types/w3c-generic-sensor": "^1.0.6",
-        "@types/web": "^0.0.114",
-        "cross-env": "^7.0.3",
-        "@openhps/core": "^1.0.16"
+        "@openhps/core": "^1.0.16",
+        "@types/w3c-generic-sensor": "^1.0.11",
+        "@types/web": "^0.0.356",
+        "cross-env": "^7.0.3"
     },
     "exports": {
         ".": {

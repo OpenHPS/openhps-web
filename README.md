@@ -22,7 +22,7 @@
 </h3>
 
 <br />
-This is a monorepo for all web components of OpenHPS. 
+This is a monorepo for all web components of OpenHPS.
 
 ## Installation
 
@@ -31,20 +31,27 @@ This is a monorepo for all web components of OpenHPS.
 ## Commit
 
 ### Linting
+
 Make sure to run `yarn run lint -- --fix` to fix and detect any linting issues. Ensure there are no errors
 or warnings.
 
 ### Testing
+
 Test any changes using `yarn run test` which will perform unit tests on existing features. Contributors are expected
 to create unit tests for new features.
 
 ## Contributors
-The framework is open source and is mainly developed by Dr. Maxim Van de Wynckel as part of his research towards *Interoperable and Discoverable Indoor Positioning Systems* under the supervision of Prof. Dr. Beat Signer.
+
+The framework is open source and is mainly developed by Dr. Maxim Van de Wynckel as part of his research towards _Interoperable and Discoverable Indoor Positioning Systems_ under the supervision of Prof. Dr. Beat Signer.
+
+Maintained by [MVdW-Software](https://mvdw-software.com).
 
 ## Contributing
+
 Use of OpenHPS, contributions and feedback is highly appreciated. Please read our [contributing guidelines](https://github.com/OpenHPS/.github/blob/HEAD/CONTRIBUTING.md) for more information.
 
 ## License
+
 Copyright (C) 2019-2025 Maxim Van de Wynckel & Vrije Universiteit Brussel
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at

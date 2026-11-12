@@ -30,8 +30,12 @@ export class XRSink<In extends XRDataFrame> extends SinkNode<In> {
 
     onPush(): Promise<void> {
         return new Promise((resolve) => {
-            const gl = this._service.gl;
             const session = this._service.session;
+            // `ended` is not yet typed by @types/webxr
+            if (!session || (session as any).ended) {
+                return resolve();
+            }
+            const gl = this._service.gl;
             gl.bindFramebuffer(gl.FRAMEBUFFER, session.renderState.baseLayer.framebuffer);
             resolve();
         });

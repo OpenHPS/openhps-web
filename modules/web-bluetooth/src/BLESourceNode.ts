@@ -10,6 +10,7 @@ export class BLESourceNode extends SourceNode<RFDataFrame> {
     protected options: BLESourceNodeOptions;
     protected bluetooth: Bluetooth;
     protected scan: BluetoothLEScan;
+    private _onAdvertisement: (event: BluetoothAdvertisingEvent) => void;
 
     constructor(options?: BLESourceNodeOptions) {
         super(options);
@@ -25,7 +26,8 @@ export class BLESourceNode extends SourceNode<RFDataFrame> {
             if (!this.bluetooth || !this.bluetooth.requestLEScan) {
                 return reject(new Error('Bluetooth scanning is not supported!'));
             }
-            this.bluetooth.addEventListener('advertisementreceived', this.onAdvertisement.bind(this));
+            this._onAdvertisement = this.onAdvertisement.bind(this);
+            this.bluetooth.addEventListener('advertisementreceived', this._onAdvertisement);
             resolve();
         });
     }
@@ -69,6 +71,10 @@ export class BLESourceNode extends SourceNode<RFDataFrame> {
     }
 
     stop(): void {
+        if (this.bluetooth && this._onAdvertisement) {
+            this.bluetooth.removeEventListener('advertisementreceived', this._onAdvertisement);
+            this._onAdvertisement = undefined;
+        }
         if (this.scan) {
             this.scan.stop();
         }
@@ -76,7 +82,7 @@ export class BLESourceNode extends SourceNode<RFDataFrame> {
 
     onPull(): Promise<RFDataFrame> {
         return new Promise((resolve, reject) => {
-            if (!this.start) {
+            if (!this.scan) {
                 this.start()
                     .then(() => resolve(undefined))
                     .catch(reject);
@@ -97,14 +103,19 @@ export class BLESourceNode extends SourceNode<RFDataFrame> {
         if (event.manufacturerData) {
             Object.keys(event.manufacturerData).forEach((manufacturer) => {
                 const data = event.manufacturerData[manufacturer];
-                object.parseManufacturerData(parseInt(manufacturer), new Uint8Array(data.buffer));
+                object.parseManufacturerData(
+                    parseInt(manufacturer),
+                    new Uint8Array(data.buffer, data.byteOffset, data.byteLength),
+                );
             });
         }
         if (event.serviceData) {
             Object.keys(event.serviceData).map((serviceKey) => {
                 const data = event.serviceData[serviceKey];
                 const serviceUUID = BLEUUID.fromString(serviceKey);
-                object.services.push(new BLEService(serviceUUID, new Uint8Array(data.buffer)));
+                object.services.push(
+                    new BLEService(serviceUUID, new Uint8Array(data.buffer, data.byteOffset, data.byteLength)),
+                );
             });
         }
         if (!object.txPower && event.txPower) {

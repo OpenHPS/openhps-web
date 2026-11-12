@@ -20,6 +20,9 @@ import { SensorSourceNodeInterface } from '../SensorSourceNodeInterface';
  */
 export class SensorSourceNode extends SourceNode<DataFrame> implements SensorSourceNodeInterface {
     protected options: SensorSourceOptions;
+    private _running = false;
+    private _onDeviceMotion: (event: DeviceMotionEvent) => void;
+    private _onDeviceOrientation: (event: DeviceOrientationEvent) => void;
 
     constructor(options?: SensorSourceOptions) {
         super(options);
@@ -44,69 +47,69 @@ export class SensorSourceNode extends SourceNode<DataFrame> implements SensorSou
 
     start(): Promise<void> {
         return new Promise((resolve) => {
-            const sensorUID = this.source ? this.source.uid : this.uid;
-            window.addEventListener(
-                'devicemotion',
-                (event) => {
-                    // Create a new data frame for the orientation change
-                    const dataFrame = new DataFrame();
-                    const frequency = 1000 / event.interval;
-                    dataFrame.addSensor(
-                        new AccelerometerObject(
-                            sensorUID + '_accl',
-                            new Acceleration(
-                                event.accelerationIncludingGravity.x,
-                                event.accelerationIncludingGravity.y,
-                                event.accelerationIncludingGravity.z,
-                                AccelerationUnit.METER_PER_SECOND_SQUARE,
-                            ),
-                            frequency,
+            this._running = true;
+            this._onDeviceMotion = (event) => {
+                if (!this._running) {
+                    return;
+                }
+                const sensorUID = this.source ? this.source.uid : this.uid;
+                // Create a new data frame for the orientation change
+                const dataFrame = new DataFrame();
+                const frequency = 1000 / event.interval;
+                dataFrame.addSensor(
+                    new AccelerometerObject(
+                        sensorUID + '_accl',
+                        new Acceleration(
+                            event.accelerationIncludingGravity.x,
+                            event.accelerationIncludingGravity.y,
+                            event.accelerationIncludingGravity.z,
+                            AccelerationUnit.METER_PER_SECOND_SQUARE,
                         ),
-                    );
-                    dataFrame.addSensor(
-                        new GyroscopeObject(
-                            sensorUID + '_gyro',
-                            new AngularVelocity(
-                                event.rotationRate.beta,
-                                event.rotationRate.gamma,
-                                event.rotationRate.alpha,
-                                AngularVelocityUnit.RADIAN_PER_SECOND,
-                            ),
-                            frequency,
+                        frequency,
+                    ),
+                );
+                dataFrame.addSensor(
+                    new GyroscopeObject(
+                        sensorUID + '_gyro',
+                        new AngularVelocity(
+                            event.rotationRate.beta,
+                            event.rotationRate.gamma,
+                            event.rotationRate.alpha,
+                            AngularVelocityUnit.RADIAN_PER_SECOND,
                         ),
-                    );
-                    dataFrame.addSensor(
-                        new AccelerometerObject(
-                            sensorUID + '_linearaccl',
-                            new Acceleration(
-                                event.acceleration.x,
-                                event.acceleration.y,
-                                event.acceleration.z,
-                                AccelerationUnit.METER_PER_SECOND_SQUARE,
-                            ),
-                            frequency,
+                        frequency,
+                    ),
+                );
+                dataFrame.addSensor(
+                    new AccelerometerObject(
+                        sensorUID + '_linearaccl',
+                        new Acceleration(
+                            event.acceleration.x,
+                            event.acceleration.y,
+                            event.acceleration.z,
+                            AccelerationUnit.METER_PER_SECOND_SQUARE,
                         ),
-                    );
+                        frequency,
+                    ),
+                );
 
-                    const source = this.source;
-                    source.getPosition().angularVelocity = dataFrame.getSensor(GyroscopeObject).value;
-                    dataFrame.addSensor(
-                        new AbsoluteOrientationSensorObject(
-                            sensorUID + '_orientation',
-                            source.getPosition().orientation,
-                        ),
-                    );
-                    dataFrame.source = source;
+                const source = this.source;
+                source.getPosition().angularVelocity = dataFrame.getSensor(GyroscopeObject).value;
+                dataFrame.addSensor(
+                    new AbsoluteOrientationSensorObject(sensorUID + '_orientation', source.getPosition().orientation),
+                );
+                dataFrame.source = source;
 
-                    this.push(dataFrame);
-                },
-                true,
-            );
+                this.push(dataFrame);
+            };
 
-            window.addEventListener('deviceorientation', (event) => {
+            this._onDeviceOrientation = (event) => {
                 const source = this.source;
                 source.getPosition().orientation = Orientation.fromEuler([event.beta, event.gamma, event.alpha]);
-            });
+            };
+
+            window.addEventListener('devicemotion', this._onDeviceMotion, true);
+            window.addEventListener('deviceorientation', this._onDeviceOrientation);
 
             this.logger('debug', 'Browser orientation and motion events registered!');
             resolve();
@@ -114,7 +117,18 @@ export class SensorSourceNode extends SourceNode<DataFrame> implements SensorSou
     }
 
     stop(): Promise<void> {
-        return Promise.resolve();
+        return new Promise((resolve) => {
+            this._running = false;
+            if (this._onDeviceMotion) {
+                window.removeEventListener('devicemotion', this._onDeviceMotion, true);
+                this._onDeviceMotion = undefined;
+            }
+            if (this._onDeviceOrientation) {
+                window.removeEventListener('deviceorientation', this._onDeviceOrientation);
+                this._onDeviceOrientation = undefined;
+            }
+            resolve();
+        });
     }
 
     public onPull(): Promise<DataFrame> {

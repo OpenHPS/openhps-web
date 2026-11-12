@@ -16,7 +16,7 @@ export class XRSource extends SourceNode<XRDataFrame> {
         this.options.source = this.options.source || new CameraObject(this.uid);
         this.options.output = this.options.output === undefined ? true : this.options.output;
 
-        this.on('build', this._onBuild.bind(this));
+        this.once('build', this._onBuild.bind(this));
         this.once('destroy', this._onDestroy.bind(this));
     }
 
@@ -40,6 +40,10 @@ export class XRSource extends SourceNode<XRDataFrame> {
 
     start(): Promise<void> {
         return new Promise((resolve, reject) => {
+            if (this._refSpace !== null) {
+                // Already started
+                return resolve();
+            }
             // Request local reference spaces at the time this session was created
             this._service.session
                 .requestReferenceSpace('local')
@@ -68,7 +72,7 @@ export class XRSource extends SourceNode<XRDataFrame> {
         if (pose) {
             // Create XR Data Frame
             const dataFrame = new XRDataFrame();
-            dataFrame.source = this.source.clone();
+            dataFrame.source = this.source;
             dataFrame.source.colorOrder = ColorOrder.RGBA;
 
             // Get camera view
@@ -83,10 +87,9 @@ export class XRSource extends SourceNode<XRDataFrame> {
                 dataFrame.texture = image;
                 dataFrame.height = view.camera.height;
                 dataFrame.width = view.camera.width;
-                dataFrame.source.width = view.camera.width;
-                dataFrame.source.height = view.camera.height;
                 if (this.options.includeImage) {
                     // Create a new framebuffer for the image
+                    const previousFramebuffer = gl.getParameter(gl.FRAMEBUFFER_BINDING);
                     const framebuffer = gl.createFramebuffer();
                     gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
                     gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, dataFrame.texture, 0);
@@ -95,6 +98,10 @@ export class XRSource extends SourceNode<XRDataFrame> {
                     const data = new Uint8Array(dataFrame.width * dataFrame.height * 4);
                     gl.readPixels(0, 0, dataFrame.width, dataFrame.height, gl.RGBA, gl.UNSIGNED_BYTE, data);
                     dataFrame.image = data;
+
+                    // Restore the previous framebuffer and dispose of the temporary one
+                    gl.bindFramebuffer(gl.FRAMEBUFFER, previousFramebuffer);
+                    gl.deleteFramebuffer(framebuffer);
                 }
                 break; // Do not get other poses?
             }
@@ -121,6 +128,8 @@ export class XRSource extends SourceNode<XRDataFrame> {
             dataFrame.viewerPose = matrix;
             dataFrame.rawFrame = frame;
             dataFrame.source = this.source;
+            dataFrame.source.width = dataFrame.width;
+            dataFrame.source.height = dataFrame.height;
             dataFrame.refSpace = this._refSpace;
 
             this.push(dataFrame).then(() => {
@@ -135,7 +144,12 @@ export class XRSource extends SourceNode<XRDataFrame> {
     public onPull(): Promise<XRDataFrame> {
         return new Promise<XRDataFrame>((resolve) => {
             if (this._service.session !== null) {
-                this._service.session.requestAnimationFrame(this._onXRFrame.bind(this));
+                if (this._refSpace === null) {
+                    // Make sure the reference space is resolved before scheduling frames
+                    this.start().catch(() => resolve(undefined));
+                } else {
+                    this._service.session.requestAnimationFrame(this._onXRFrame.bind(this));
+                }
             }
             resolve(undefined);
         });

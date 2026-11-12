@@ -82,13 +82,13 @@ export class SensorSourceNode extends SourceNode<DataFrame> implements SensorSou
                 return resolve();
             }
 
-            this.options.sensors.forEach((sensor) => {
-                const SensorType = this.findSensor(sensor);
-                if (SensorType === undefined) {
+            (this.options.sensors ?? []).forEach((sensor) => {
+                const SensorImplementation = this.findSensor(sensor);
+                if (SensorImplementation === undefined) {
                     // Not supported
                     return;
                 }
-                const sensorInstance = new SensorType({
+                const sensorInstance = new SensorImplementation({
                     frequency: Math.round(1000 / this.options.interval),
                 });
                 sensorInstance.addEventListener('reading', (event) => {
@@ -260,7 +260,7 @@ export class SensorSourceNode extends SourceNode<DataFrame> implements SensorSou
             case AccelerometerObject:
                 return ['accelerometer'];
             default:
-                return undefined;
+                return [];
         }
     }
 }

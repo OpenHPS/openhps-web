@@ -50,7 +50,7 @@ export class GeolocationSourceNode extends SourceNode<DataFrame> {
     start(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this.geolocation = navigator.geolocation;
-            this.geolocation.watchPosition(
+            this._watchId = this.geolocation.watchPosition(
                 (position: GeolocationPosition) => {
                     const geoPos = this._convertPosition(position);
                     this.source.setPosition(geoPos);
@@ -72,7 +72,7 @@ export class GeolocationSourceNode extends SourceNode<DataFrame> {
 
     private _convertPosition(position: GeolocationPosition): GeographicalPosition {
         const geoPos = new GeographicalPosition();
-        geoPos.accuracy = new Accuracy2D(position.coords.accuracy, position.coords.altitudeAccuracy, LengthUnit.METER);
+        geoPos.accuracy = new Accuracy2D(position.coords.accuracy, position.coords.accuracy, LengthUnit.METER);
         geoPos.altitude = position.coords.altitude;
         geoPos.latitude = position.coords.latitude;
         geoPos.longitude = position.coords.longitude;
@@ -92,7 +92,10 @@ export class GeolocationSourceNode extends SourceNode<DataFrame> {
 
     stop(): Promise<void> {
         return new Promise<void>((resolve) => {
-            this.geolocation.clearWatch(this._watchId);
+            if (this.geolocation && this._watchId !== undefined) {
+                this.geolocation.clearWatch(this._watchId);
+                this._watchId = undefined;
+            }
             resolve();
         });
     }
@@ -109,7 +112,7 @@ export class GeolocationSourceNode extends SourceNode<DataFrame> {
                 {
                     enableHighAccuracy: true,
                     timeout: this.options.timeout,
-                    maximumAge: this.options.timeout,
+                    maximumAge: this.options.interval,
                 },
             );
         });

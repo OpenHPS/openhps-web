@@ -19,6 +19,7 @@ export class VideoSource extends SourceNode<VideoFrame<ImageData>> {
     constructor(options?: VideoSourceOptions) {
         super(options);
         this.options.source = this.options.source || new CameraObject(this.uid, undefined);
+        this.options.fps = this.options.fps ?? 30;
         this.once('build', this._onBuild.bind(this));
         this.once('destroy', this.stop.bind(this));
     }
@@ -32,7 +33,7 @@ export class VideoSource extends SourceNode<VideoFrame<ImageData>> {
                 navigator.webkitGetUserMedia ||
                 navigator.mozGetUserMedia ||
                 navigator.msGetUserMedia;
-            if (this.getUserMedia === undefined) {
+            if (getUserMedia === undefined) {
                 throw new Error(`getUserMedia is not supported by the browser!`);
             }
             return (constraints) =>
@@ -44,7 +45,6 @@ export class VideoSource extends SourceNode<VideoFrame<ImageData>> {
 
     private _onBuild(): Promise<void> {
         return new Promise((resolve, reject) => {
-            this.getUserMedia();
             // Create a canvas element
             if (this.options.canvas) {
                 if (typeof this.options.canvas === 'string') {
@@ -97,6 +97,9 @@ export class VideoSource extends SourceNode<VideoFrame<ImageData>> {
         } else {
             throw new Error(`No video source loaded!`);
         }
+        if (this.timer) {
+            clearInterval(this.timer as any);
+        }
         this.timer = setInterval(
             () => {
                 if (ready || !this.options.throttleRead) {
@@ -137,7 +140,9 @@ export class VideoSource extends SourceNode<VideoFrame<ImageData>> {
     }
 
     pause(): void {
-        this.video.pause();
+        if (this.video) {
+            this.video.pause();
+        }
         if (this.timer) {
             clearInterval(this.timer as any);
         }
@@ -152,7 +157,14 @@ export class VideoSource extends SourceNode<VideoFrame<ImageData>> {
     }
 
     get actualFPS(): number {
-        return Math.round((this.frame / ((Date.now() - this.start) / 1000)) * 100) / 100;
+        if (this.start === undefined) {
+            return 0;
+        }
+        const elapsed = Date.now() - this.start;
+        if (elapsed <= 0) {
+            return 0;
+        }
+        return Math.round((this.frame / (elapsed / 1000)) * 100) / 100;
     }
 
     /**

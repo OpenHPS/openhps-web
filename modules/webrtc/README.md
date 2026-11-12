@@ -25,62 +25,68 @@
 This component adds a video source node that can be used for processing video data.
 
 ## Getting Started
+
 If you have [npm installed](https://www.npmjs.com/get-npm), start using @openhps/webrtc with the following command.
+
 ```bash
 npm install @openhps/webrtc --save
 ```
+
 ## Usage
 
 ```html
 <button id="start">Start Test</button>
 
-<div id="result">
-    Click the start button to test the component.
-</div>
+<div id="result">Click the start button to test the component.</div>
 
 <video id="videoRef"></video>
 
 <script type="module">
-    import { 
-        ModelBuilder, 
-        CallbackSinkNode, 
+    import {
+        ModelBuilder,
+        CallbackSinkNode,
         DataObject,
         Magnetometer,
         Accelerometer,
         Gyroscope,
-        LinearAccelerationSensor
+        LinearAccelerationSensor,
     } from './js/openhps-core.es.min.js';
     import { VideoSource } from './js/openhps-webrtc.es.min.js';
 
     var source = new VideoSource({
-        uid: "source",
+        uid: 'source',
         autoStart: true,
         fps: 30,
-        videoSource: "videoRef",
+        videoSource: 'videoRef',
         height: 720,
-        width: 1024
+        width: 1024,
     });
 
     source.on('error', console.error);
-    
-    document.getElementById("start").onclick = () => source.play();
-    
+
+    document.getElementById('start').onclick = () => source.play();
+
     ModelBuilder.create()
         .from(source)
-        .to(new CallbackSinkNode(frame => {
-            console.log(frame);
-        }))
+        .to(
+            new CallbackSinkNode((frame) => {
+                console.log(frame);
+            }),
+        )
         .build();
 </script>
 ```
 
 ## Contributors
-The framework is open source and is mainly developed by PhD Student Maxim Van de Wynckel as part of his research towards *Hybrid Positioning and Implicit Human-Computer Interaction* under the supervision of Prof. Dr. Beat Signer.
+
+The framework is open source and was developed as part of the PhD of Maxim Van de Wynckel under the supervision of Prof. Dr. Beat Signer. It is currently maintained by [MVdW-Software](https://mvdw-software.com).
 
 ## Contributing
+
 Use of OpenHPS, contributions and feedback is highly appreciated. Please read our [contributing guidelines](CONTRIBUTING.md) for more information.
 
 ## License
+
 Copyright (C) 2019-2023 Maxim Van de Wynckel & Vrije Universiteit Brussel
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at

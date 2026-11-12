@@ -42,9 +42,7 @@ to create unit tests for new features.
 
 ## Contributors
 
-The framework is open source and is mainly developed by Dr. Maxim Van de Wynckel as part of his research towards _Interoperable and Discoverable Indoor Positioning Systems_ under the supervision of Prof. Dr. Beat Signer.
-
-Maintained by [MVdW-Software](https://mvdw-software.com).
+The framework is open source and was developed as part of the PhD of Maxim Van de Wynckel under the supervision of Prof. Dr. Beat Signer. It is currently maintained by [MVdW-Software](https://mvdw-software.com).
 
 ## Contributing
 

@@ -54,7 +54,7 @@
         "cross-env": "^7.0.3"
     },
     "dependencies": {
-        "@openhps/video": "^1.0.3"
+        "@openhps/video": "^1.1.0"
     },
     "exports": {
         ".": {
